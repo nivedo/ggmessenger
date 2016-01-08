@@ -90,7 +90,7 @@ app.on('ready', () => {
 	});
 
 	page.on('did-frame-finish-load', (e, url) => {
-		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'newchat.js'), 'utf8'));
+		page.executeJavaScript('CallbackMTG();var s = document.querySelector("._4_j4 .scrollable");s.scrollTop = s.scrollHeight;');
 	});
 });
 

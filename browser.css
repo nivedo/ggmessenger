@@ -7,6 +7,38 @@ html {
 	font-family: "OPTIBelwe-Medium";
 }
 */
+/*
+._4u-c._1wfr {
+  background-image: url("http://eskipaper.com/images/blurred-wallpaper-1.jpg") !important;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+*/
+/*
+._1q5- {
+  background-image: url("http://www.noahbradley.com/images/Noah-Bradley_A-Place-To-Call-Home.jpg") !important;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+._5742 {
+  background-color: rgba(255,255,255,0.6) !important;
+}
+._4rv3 {
+  background-color: rgba(0,0,0,0.5) !important;
+}
+._llq, ._36zg, ._45m_._2vxa, ._1n-e, ._5i_d.__6l {
+  color: #ddd !important;
+}
+._497pm {
+  color: #eee !important;
+}
+*/
 
 ._20bp .tooltip {
 	background: transparent !important;
@@ -20,14 +52,17 @@ html {
 }
 
 ._nd_ ._hh7 {
+  /*
   background-color: #cfd8dc !important;
+  */
+  background-color: #CEEF9E !important;
   color: #141823 !important;
 }
 
 .sticker {
 	width: 220px;
   height: 319px;
-  border-radius: 8px;
+  border-radius: 4px;
 	background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/missing.jpg");
   background-size: 100%;
   background-repeat: no-repeat;

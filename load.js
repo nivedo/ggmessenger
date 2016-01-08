@@ -7,35 +7,7 @@ function SafeCSSClass(name) {
   });
 }
 
-function hasClass(element, cls) {
-  return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
-}
-
-// Mutation Observer to detect DOM Changes
-var observeDOM = (function(){
-  var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
-    eventListenerSupported = window.addEventListener;
-
-  return function(obj, callback){
-    if( MutationObserver ){
-      // define a new observer
-      var obs = new MutationObserver(function(mutations, observer){
-        if( mutations[0].addedNodes.length || mutations[0].removedNodes.length)
-          if( mutations[0].target.nodeName != "SPAN" )
-            callback();
-      });
-      // have the observer observe foo for changes in children
-      obs.observe( obj, { childList:true, subtree:true });
-    }
-    else if( eventListenerSupported ){
-      obj.addEventListener('DOMNodeInserted', callback, false);
-      obj.addEventListener('DOMNodeRemoved', callback, false);
-    }
-  }
-})();
-
-// Observe a specific DOM element:
-observeDOM( document.querySelector('._1q5-') ,function(){ 
+function CallbackMTG() {
   var elems = document.querySelectorAll('div > span._3oh-'), i, elem;
   for (i = 0; i < elems.length; ++i) {
     elem = elems[i]
@@ -65,4 +37,36 @@ observeDOM( document.querySelector('._1q5-') ,function(){
       tooltips[i].className += (" " + safeclass)
     }
   }
+}
+
+function hasClass(element, cls) {
+  return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+}
+
+// Mutation Observer to detect DOM Changes
+var observeDOM = (function(){
+  var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
+    eventListenerSupported = window.addEventListener;
+
+  return function(obj, callback){
+    if( MutationObserver ){
+      // define a new observer
+      var obs = new MutationObserver(function(mutations, observer){
+        if( mutations[0].addedNodes.length || mutations[0].removedNodes.length)
+          if( mutations[0].target.nodeName != "SPAN" )
+            callback();
+      });
+      // have the observer observe foo for changes in children
+      obs.observe( obj, { childList:true, subtree:true });
+    }
+    else if( eventListenerSupported ){
+      obj.addEventListener('DOMNodeInserted', callback, false);
+      obj.addEventListener('DOMNodeRemoved', callback, false);
+    }
+  }
+})();
+
+// Observe a specific DOM element:
+observeDOM( document.querySelector('._1q5-') ,function(){ 
+  CallbackMTG()
 });
