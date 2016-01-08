@@ -1,23 +1,23 @@
 {
-  "name": "caprine",
-  "productName": "Caprine",
-  "version": "0.5.1",
-  "description": "Unofficial Facebook Messenger app",
+  "name": "ggmessenger",
+  "productName": "GGMessenger for Facebook",
+  "version": "0.1.1",
+  "description": "Unofficial Facebook Messenger for Gamers",
   "license": "MIT",
-  "repository": "sindresorhus/caprine",
+  "repository": "nivedo/ggcaprine",
   "author": {
-    "name": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "sindresorhus.com"
+    "name": "Jay Ni",
+    "email": "jayxni@gmail.com",
+    "url": "gg.chat"
   },
   "electronVersion": "0.36.0",
   "scripts": {
     "test": "xo",
     "start": "electron .",
     "build": "npm run build-osx && npm run build-linux && npm run build-windows",
-    "build-osx": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --ignore='^/media$' --prune --platform=darwin --arch=x64 --icon=media/Icon.icns --app-bundle-id=com.sindresorhus.caprine --sign='Developer ID Application: Sindre Sorhus (YG56YK5RN5)' --app-version=$npm_package_version --version=$npm_package_electronVersion && cd dist/Caprine-darwin-x64 && zip -ryXq9 ../Caprine-osx-${npm_package_version}.zip Caprine.app",
-    "build-linux": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --ignore='^/media/(?!Icon.png$).*' --prune --platform=linux --arch=x64 --app-bundle-id=com.sindresorhus.caprine --app-version=$npm_package_version --version=$npm_package_electronVersion && cd dist/Caprine-linux-x64/ && zip -ryq9 ../Caprine-linux-\"$npm_package_version\".zip *",
-    "build-windows": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --ignore='^/media/(?!Icon.ico$).*' --prune --platform=win32 --arch=ia32 --icon=media/Icon.ico --version=$npm_package_electronVersion --version-string.ProductName=$npm_package_productName --version-string.ProductVersion=$npm_package_electronVersion && cd dist/Caprine-win32-ia32/ && zip -ryq9 ../Caprine-windows-\"$npm_package_version\".zip *"
+    "build-osx": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --ignore='^/media$' --prune --platform=darwin --arch=x64 --icon=media/Icon.icns --app-bundle-id=WJ4BYC5557.com.jni.ggmessenger --sign='Developer ID Application: Jay Ni (WJ4BYC5557)' --app-version=$npm_package_version --version=$npm_package_electronVersion && cd dist/GGMessenger-darwin-x64 && zip -ryXq9 ../GGMessenger-osx-${npm_package_version}.zip GGMessenger.app",
+    "build-linux": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --ignore='^/media/(?!Icon.png$).*' --prune --platform=linux --arch=x64 --app-bundle-id=WJ4BYC5557.com.jni.ggmessenger --app-version=$npm_package_version --version=$npm_package_electronVersion && cd dist/Caprine-linux-x64/ && zip -ryq9 ../Caprine-linux-\"$npm_package_version\".zip *",
+    "build-windows": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --ignore='^/media/(?!Icon.ico$).*' --prune --platform=win32 --arch=ia32 --icon=media/Icon.ico --version=$npm_package_electronVersion --version-string.ProductName=$npm_package_productName --version-string.ProductVersion=$npm_package_electronVersion && cd dist/GGMessenger-win32-ia32/ && zip -ryq9 ../GGMessenger-windows-\"$npm_package_version\".zip *"
   },
   "files": [
     "index.js",
@@ -41,7 +41,7 @@
     "electron-dl": "^0.2.0"
   },
   "devDependencies": {
-    "electron-packager": "^5.1.0",
+    "electron-packager": "^5.2.0",
     "electron-prebuilt": "^0.36.0",
     "xo": "*"
   },

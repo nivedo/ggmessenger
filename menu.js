@@ -93,6 +93,24 @@ const darwinTpl = [
 		]
 	},
 	{
+		label: 'Modes',
+		submenu: [
+			{
+				label: 'Magic: the Gathering',
+				click() {
+					//sendAction('set-mode-magic');
+					sendAction('replace-test');
+				}
+			},
+			{
+				label: 'Hearthstone',
+				click() {
+					sendAction('set-mode-hearthstone');
+				}
+			}
+		]
+	},
+	{
 		label: 'Edit',
 		submenu: [
 			{

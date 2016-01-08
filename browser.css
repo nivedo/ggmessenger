@@ -2,6 +2,118 @@ html {
 	overflow: hidden;
 }
 
+/* Custom fonts 
+._20bp {
+	font-family: "OPTIBelwe-Medium";
+}
+*/
+
+._20bp .tooltip {
+	background: transparent !important;
+	text-decoration: none !important;
+	font-style: normal !important;
+	color: #0077e5 !important;
+}
+
+.tooltip:hover {
+	background: transparent !important;
+}
+
+._nd_ ._hh7 {
+  background-color: #cfd8dc !important;
+  color: #141823 !important;
+}
+
+.sticker {
+	width: 220px;
+  height: 319px;
+  border-radius: 8px;
+	background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/missing.jpg");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/**
+ * Tooltip Styles
+ */
+
+/* Add this attribute to the element that needs a tooltip */
+.tooltip {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* Hide the tooltip content by default */
+.tooltip:before,
+.tooltip:after {
+  visibility: hidden;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Position tooltip above the element */
+.tooltip:before {
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  margin-bottom: 5px;
+  margin-left: -80px;
+  padding: 7px;
+  width: 220px;
+  height: 319px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 8px;
+  background-color: #000;
+  background-color: hsla(0, 0%, 20%, 0.0);
+  color: #fff;
+  content: "";
+  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/missing.jpg");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.2;
+
+  -moz-box-shadow:5px 5px 5px rgba(0,0,0,0.3);
+	-webkit-box-shadow:5px 5px 5px rgba(0,0,0,0.3);
+	box-shadow:5px 5px 5px rgba(0,0,0,0.3);
+}
+
+.tooltip.right:before {
+	margin-left: -180px;
+}
+
+/* Triangle hack to make tooltip look like a speech bubble */
+.tooltip:after {
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -5px;
+  width: 0;
+  border-top: 5px solid #000;
+  border-top: 5px solid hsla(0, 0%, 20%, 0.0);
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  content: " ";
+  font-size: 0;
+  line-height: 0;
+}
+
+/* Show tooltip content on hover */
+.tooltip:hover:before,
+.tooltip:hover:after {
+  visibility: visible;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+
 /* window wrapper */
 ._4sp8 {
 	min-width: 0;

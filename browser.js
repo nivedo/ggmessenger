@@ -12,6 +12,19 @@ ipc.on('new-conversation', () => {
 	document.querySelector('._30yy[href=\'/new\']').click();
 });
 
+ipc.on('set-mode-magic', () => {
+	document.querySelector('._20bp').style.backgroundColor = "#e7d4a9";
+	var divs = document.querySelectorAll('._3oh-'), i;
+	for (i = 0; i < divs.length; ++i) {
+		divs[i].style.fontFamily = "OPTIBelwe-Medium";
+	}
+	//document.querySelector('._30yy._yht').click();
+});
+
+ipc.on('set-mode-hearthstone', () => {
+	document.querySelector('._30yy[href=\'/new\']').click();
+});
+
 ipc.on('log-out', () => {
 	// create the menu for the below
 	document.querySelector('._30yy._2fug._p').click();

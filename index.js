@@ -31,7 +31,7 @@ function updateBadge(title) {
 }
 
 function createMainWindow() {
-	const lastWindowState = storage.get('lastWindowState') || {width: 800, height: 600};
+	const lastWindowState = storage.get('lastWindowState') || {width: 1000, height: 800};
 
 	const win = new electron.BrowserWindow({
 		title: app.getName(),
@@ -79,12 +79,18 @@ app.on('ready', () => {
 
 	page.on('dom-ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
+		page.insertCSS(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.css'), 'utf8'));
+		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'load.js'), 'utf8'));
 		mainWindow.show();
 	});
 
 	page.on('new-window', (e, url) => {
 		e.preventDefault();
 		electron.shell.openExternal(url);
+	});
+
+	page.on('did-frame-finish-load', (e, url) => {
+		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'newchat.js'), 'utf8'));
 	});
 });
 
