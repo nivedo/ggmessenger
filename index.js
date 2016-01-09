@@ -31,7 +31,7 @@ function updateBadge(title) {
 }
 
 function createMainWindow() {
-	const lastWindowState = storage.get('lastWindowState') || {width: 1000, height: 800};
+	const lastWindowState = storage.get('lastWindowState') || {width: 1200, height: 900};
 
 	const win = new electron.BrowserWindow({
 		title: app.getName(),

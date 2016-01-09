@@ -1,10 +1,10 @@
 {
   "name": "ggmessenger",
-  "productName": "GGMessenger for Facebook",
-  "version": "0.1.1",
+  "productName": "GG Messenger",
+  "version": "0.1.2",
   "description": "Unofficial Facebook Messenger for Gamers",
   "license": "MIT",
-  "repository": "nivedo/ggcaprine",
+  "repository": "nivedo/ggmessenger",
   "author": {
     "name": "Jay Ni",
     "email": "jayxni@gmail.com",

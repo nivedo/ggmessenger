@@ -2,21 +2,13 @@ html {
 	overflow: hidden;
 }
 
-/* Custom fonts 
-._20bp {
-	font-family: "OPTIBelwe-Medium";
-}
-*/
 /*
-._4u-c._1wfr {
-  background-image: url("http://eskipaper.com/images/blurred-wallpaper-1.jpg") !important;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-repeat: no-repeat;
+._20bp, ._z4_ {
+	font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
 }
 */
+
+/* THEME 1 */
 /*
 ._1q5- {
   background-image: url("http://www.noahbradley.com/images/Noah-Bradley_A-Place-To-Call-Home.jpg") !important;
@@ -26,25 +18,67 @@ html {
   background-size: cover;
   background-repeat: no-repeat;
 }
-._5742 {
+._5742, ._49ou, ._4_j5 {
   background-color: rgba(255,255,255,0.6) !important;
 }
 ._4rv3 {
   background-color: rgba(0,0,0,0.5) !important;
 }
-._llq, ._36zg, ._45m_._2vxa, ._1n-e, ._5i_d.__6l {
+._llj {
+  border-bottom: 1px solid rgba(255,255,255, .05) !important;
+}
+time._3oh- {
+  background-color: rgba(255,255,255,0.3) !important;
+  padding: 3px 15px;
+  border-radius: 8px;
+}
+._llq, ._36zg, ._45m_._2vxa, ._1n-e {
   color: #ddd !important;
 }
-._497pm {
+._497p {
   color: #eee !important;
 }
 */
+
+/* THEME 2 */
+._1enh, ._1ht1, ._5t4c, ._5l37 {
+  background-color: #224760 !important;
+}
+._36ic, ._225b, ._5iwm ._58al {
+  background-color: rgba(0,0,0,0.15) !important;
+}
+._1ht1._1ht2 {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+._1enh .uiScrollableAreaGripper {
+  background-color: rgba(255,255,255,0.25) !important;
+  border: 1px solid rgba(100,100,100,.3);
+}
+._1qt4:not(:first-of-type), ._5l38 {
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+._5l37:first-of-type ._5l38, ._1ht1:first-child ._1qt4 {
+  border-top: none;
+}
+._58al::-webkit-input-placeholder {
+  color: rgba(255,255,255,0.3) !important;
+}
+._1htf, ._1ht7, ._225b, ._5iwm ._58al {
+  color: rgba(255,255,255,0.5) !important;
+}
+._1ht6, ._364g, ._5l37 {
+  color: rgba(255,255,255,0.9)  !important;
+}
+._1ht6, ._llq ._3oh-, ._3eur ._3oh-, ._17w2 ._3oh-, ._364g {
+  font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif !important;
+}
 
 ._20bp .tooltip {
 	background: transparent !important;
 	text-decoration: none !important;
 	font-style: normal !important;
 	color: #0077e5 !important;
+  word-break: keep-all;
 }
 
 .tooltip:hover {
@@ -57,6 +91,10 @@ html {
   */
   background-color: #CEEF9E !important;
   color: #141823 !important;
+}
+
+._nd_ ._hh7 a {
+  color: #0077e5 !important;
 }
 
 .sticker {
