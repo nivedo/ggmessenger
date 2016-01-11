@@ -97,6 +97,10 @@ time._3oh- {
   color: #0077e5 !important;
 }
 
+._4_j5._4t9y {
+  display: none;
+}
+
 .sticker {
 	width: 220px;
   height: 319px;
@@ -105,6 +109,59 @@ time._3oh- {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+/* Keyboard */
+
+._5irm {
+  margin-left: 52px !important;
+}
+
+.key-icon {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: 0;
+  z-index: 99;
+  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/mtg_icon.png");
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.auto-region {
+  display: none;
+  min-width: 300px;
+  max-width: 500px;
+  height: 155px;
+  position: absolute;
+  top: -157px;
+  left: -2px;
+  z-index: 99;
+  background: rgba(255,255,255,0.95);
+  /*
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 10px rgba(0, 0, 0, .35);
+  */
+  border: 1px solid rgba(0,0,0,0.1);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/*
+.auto-region ul {
+  margin-top: 5px;
+}
+*/
+.auto-region ul li {
+  color: #0077e5 !important;
+  font-size: 1.2em;
+  padding: 0.5em 1em;
+  /*border-top: 1px solid rgba(0,0,0,0.1);*/
+}
+
+.auto-region ul li:first-of-type {
+  border: none;
 }
 
 /**

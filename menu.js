@@ -250,7 +250,7 @@ const helpSubmenu = [
 	{
 		label: `${appName} Website...`,
 		click() {
-			shell.openExternal('https://github.com/sindresorhus/caprine');
+			shell.openExternal('http://gg.chat');
 		}
 	},
 	{
@@ -264,7 +264,7 @@ const helpSubmenu = [
 ${app.getName()} ${app.getVersion()}
 ${process.platform} ${process.arch} ${os.release()}`;
 
-			shell.openExternal(`https://github.com/sindresorhus/caprine/issues/new?body=${encodeURIComponent(body)}`);
+			shell.openExternal(`https://github.com/nivedo/ggmessenger/issues/new?body=${encodeURIComponent(body)}`);
 		}
 	}
 ];

@@ -36,6 +36,7 @@ function createMainWindow() {
 	const win = new electron.BrowserWindow({
 		title: app.getName(),
 		show: false,
+		//frame: false,
 		x: lastWindowState.x,
 		y: lastWindowState.y,
 		width: lastWindowState.width,
@@ -68,6 +69,36 @@ function createMainWindow() {
 	return win;
 }
 
+function TrieString(name) {
+  return name.trim().replace(/[^a-z0-9]/g, function(s) {
+    var c = s.charCodeAt(0);
+    if (c == 32) return '_';
+    if (c == 91 || c == 93) return ''; // remove [] brackets
+    if (c >= 65 && c <= 90) return s.toLowerCase(); // convert upper to lowercase
+    return '' // everything else becomes dash
+  });
+}
+
+function setupTrie(page) {
+	page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'trie.js'), 'utf8'));
+	var jsinline = "var trie = new Triejs({});\n";
+	// parse json files
+	const lib = JSON.parse(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.json'), 'utf8'));
+	for (var i = 0; i < lib.length; i++) {
+		var sublib = lib[i]["assets"];
+		for( var j = 0; j < sublib.length; j++) {
+			var line = 'trie.add("'+ 
+				TrieString(sublib[j]["name"]) + 
+				'", {name: "' + 
+				sublib[j]["name"].replace(/"/g, '\\"') + 
+				'"});\n';
+			jsinline += line;
+		}
+	}
+	page.executeJavaScript(jsinline);
+	//page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.js'), 'utf8'));
+}
+
 app.on('ready', () => {
 	electron.Menu.setApplicationMenu(appMenu);
 
@@ -82,6 +113,7 @@ app.on('ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.css'), 'utf8'));
 		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'load.js'), 'utf8'));
 		mainWindow.show();
+		setupTrie(page);
 	});
 
 	page.on('new-window', (e, url) => {
@@ -90,7 +122,7 @@ app.on('ready', () => {
 	});
 
 	page.on('did-frame-finish-load', (e, url) => {
-		page.executeJavaScript('CallbackMTG();var s = document.querySelector("._4_j4 .scrollable");s.scrollTop = s.scrollHeight;');
+		page.executeJavaScript('CreateKeyboard();CallbackMTG();var s = document.querySelector("._4_j4 .scrollable");s.scrollTop = s.scrollHeight;');
 	});
 });
 
