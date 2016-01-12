@@ -129,10 +129,23 @@ time._3oh- {
   background-position: center;
 }
 
+.preview-region {
+  width: 220px;
+  height: 319px;
+  position: absolute;
+  top: -476px;
+  left: -2px;
+  z-index: 99;
+  background: transparent;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .auto-region {
   display: none;
-  min-width: 300px;
-  max-width: 500px;
+  min-width: 400px;
+  max-width: 400px;
   height: 155px;
   position: absolute;
   top: -157px;
@@ -145,6 +158,7 @@ time._3oh- {
   */
   border: 1px solid rgba(0,0,0,0.1);
   overflow: hidden;
+  overflow-y: scroll;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -155,7 +169,7 @@ time._3oh- {
 */
 .auto-region ul li {
   color: #0077e5 !important;
-  font-size: 1.2em;
+  font-size: 1em;
   padding: 0.5em 1em;
   /*border-top: 1px solid rgba(0,0,0,0.1);*/
 }

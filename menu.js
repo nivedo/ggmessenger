@@ -92,6 +92,7 @@ const darwinTpl = [
 			}
 		]
 	},
+	/*
 	{
 		label: 'Modes',
 		submenu: [
@@ -110,6 +111,7 @@ const darwinTpl = [
 			}
 		]
 	},
+	*/
 	{
 		label: 'Edit',
 		submenu: [

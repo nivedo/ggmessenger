@@ -73,29 +73,59 @@ function TrieString(name) {
   return name.trim().replace(/[^a-z0-9]/g, function(s) {
     var c = s.charCodeAt(0);
     if (c == 32) return '_';
+    if (c == 198) return "ae";
     if (c == 91 || c == 93) return ''; // remove [] brackets
     if (c >= 65 && c <= 90) return s.toLowerCase(); // convert upper to lowercase
     return '' // everything else becomes dash
   });
 }
 
-function setupTrie(page) {
+function SafeCSSClass(name) {
+  return name.trim().replace(/[^a-z0-9]/g, function(s) {
+    var c = s.charCodeAt(0);
+    if (c == 198) return "ae";
+    if (c == 91 || c == 93) return ''; // remove [] brackets
+    if (c >= 65 && c <= 90) return s.toLowerCase(); // convert upper to lowercase
+    return '-' // everything else becomes dash
+  });
+}
+
+function setupTrieAndCSS(page) {
 	page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'trie.js'), 'utf8'));
-	var jsinline = "var trie = new Triejs({});\n";
-	// parse json files
+	var jsfull = "var trie = new Triejs({sort: function() {this.sort(function(a, b) {return a.name.localeCompare(b.name);})}});";
+	var cssfull = "";
 	const lib = JSON.parse(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.json'), 'utf8'));
 	for (var i = 0; i < lib.length; i++) {
+		var bundleId = lib[i]["bundleId"];
+		var ext = lib[i]["ext"];
 		var sublib = lib[i]["assets"];
 		for( var j = 0; j < sublib.length; j++) {
-			var line = 'trie.add("'+ 
-				TrieString(sublib[j]["name"]) + 
-				'", {name: "' + 
-				sublib[j]["name"].replace(/"/g, '\\"') + 
-				'"});\n';
-			jsinline += line;
+			var name = sublib[j]["name"];
+			var words = name.trim().split(' ');
+			var lastword = "";
+			while (words.length > 0) {
+				var word = words.pop();
+				var nextword = word + " " + lastword;
+				// longer word, or beginning of word, add to trie
+				if (word.length > 3 || words.length == 0) {
+					var jsline = 'trie.add("'+ 
+						TrieString(nextword) + 
+						'", {name: "' + 
+						name.replace(/"/g, '\\"') + 
+						'"});';
+					jsfull += jsline;
+				}
+				lastword = nextword;
+			}
+			var cssline = ".tooltip." + SafeCSSClass(name) +
+				":before,.sticker." + SafeCSSClass(name) + 
+				"{background-image:url('https://s3-us-west-1.amazonaws.com/ggchat/" + bundleId + 
+				"/" +  sublib[j]["id"] + "." + ext + "')}";
+			cssfull += cssline;
 		}
 	}
-	page.executeJavaScript(jsinline);
+	page.insertCSS(cssfull);
+	page.executeJavaScript(jsfull);
 	//page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.js'), 'utf8'));
 }
 
@@ -110,10 +140,10 @@ app.on('ready', () => {
 
 	page.on('dom-ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
-		page.insertCSS(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.css'), 'utf8'));
+		//page.insertCSS(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.css'), 'utf8'));
+		setupTrieAndCSS(page);
 		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'load.js'), 'utf8'));
 		mainWindow.show();
-		setupTrie(page);
 	});
 
 	page.on('new-window', (e, url) => {
@@ -122,7 +152,7 @@ app.on('ready', () => {
 	});
 
 	page.on('did-frame-finish-load', (e, url) => {
-		page.executeJavaScript('CreateKeyboard();CallbackMTG();var s = document.querySelector("._4_j4 .scrollable");s.scrollTop = s.scrollHeight;');
+		page.executeJavaScript('CreateKeyboard();CallbackMTG();ScrollDown();');
 	});
 });
 
