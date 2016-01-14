@@ -102,10 +102,11 @@ time._3oh- {
 }
 
 .sticker {
-	width: 220px;
-  height: 319px;
-  border-radius: 4px;
-	background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/missing.jpg");
+	width: 230px;
+  height: 20px;
+  border-radius: 8px;
+  content: "???";
+	/*background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/missing.jpg");*/
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center;
@@ -123,15 +124,23 @@ time._3oh- {
   position: absolute;
   left: 0;
   z-index: 99;
-  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/mtg_icon.png");
   background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
 }
 
+.key-icon.mtg {
+  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/mtg_icon.png");
+}
+
+.key-icon.hearthstone {
+  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/hearthstone_icon.png");
+  background-size: 80%;
+}
+
 .preview-region {
   width: 220px;
-  height: 319px;
+  height: 333px;
   position: absolute;
   top: -476px;
   left: -2px;

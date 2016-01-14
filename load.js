@@ -23,10 +23,20 @@ function ScrollDown() {
   var s = document.querySelector("._4_j4 .scrollable");s.scrollTop = s.scrollHeight;
 }
 
-function CreateKeyboard() {
+function CreateKeyboard(default_type) {
   var inputbox = document.querySelector("._5irm");
   var iconbox = document.createElement("div");
-  iconbox.className = "key-icon";
+  iconbox.className = "key-icon " + default_type;
+  iconbox.alt = default_type;
+  iconbox.onclick = function() {
+    if (this.className == "key-icon mtg") {
+      this.className = "key-icon hearthstone";
+      this.alt = "hearthstone";
+    } else {
+      this.className = "key-icon mtg";
+      this.alt = "mtg";
+    }
+  }
   var autoarea = document.createElement("div");
   autoarea.className = "auto-region";
   var autoul = document.createElement("ul");
@@ -36,7 +46,7 @@ function CreateKeyboard() {
   preview.className = "preview-region";
   iconbox.appendChild(preview);
   var parent = inputbox.parentNode;
-  if (parent.firstChild.className != "key-icon") {
+  if (parent.firstChild.className.split(' ')[0] != "key-icon") {
     inputbox.parentNode.insertBefore(iconbox, inputbox);
   }
   SetKeyboardEvents();
@@ -49,8 +59,9 @@ function ClearAuto() {
   autoarea.appendChild(autoul);
 }
 
-function SetAutocomplete(results) {
+function SetAutocomplete(results, partial) {
   var autoarea = document.querySelector(".auto-region");
+  autoarea.alt = partial;
   var preview = document.querySelector(".preview-region");
   autoarea.innerHTML = "";
   var autoul = document.createElement("ul");
@@ -67,6 +78,16 @@ function SetAutocomplete(results) {
       li.onmouseout = function() {
         preview.className = "preview-region";
       };
+      /*
+      li.onclick = function() {
+        var partial = document.querySelector(".auto-region").alt;
+        var textbox = document.querySelector("._45m_._2vxa");
+        textbox.firstChild.firstChild.textContent = partial + " " + this.textContent;
+        preview.className = "preview-region";
+        autoarea.style.display = "none";
+        preview.style.display = "none";
+      };
+      */
       //li.className = "tooltip " + SafeCSSClass(results[i]["name"]);
       autoul.appendChild(li);
       noresults = false;
@@ -80,6 +101,10 @@ function SetAutocomplete(results) {
   autoarea.appendChild(autoul);
 }
 
+function SetKeyboardType(keytype) {
+  document.querySelector(".key-icon").alt = keytype;
+}
+
 function SetKeyboardEvents() {
   document.querySelector("._5irm").onkeydown = function(e) {
     if (e.keyCode == 13 && !e.shiftKey) {
@@ -88,30 +113,50 @@ function SetKeyboardEvents() {
   }
   document.onkeyup = function (e) {
     ClearAuto();
+    var keytype = document.querySelector(".key-icon").alt;
     var autoarea = document.querySelector(".auto-region");
     var preview = document.querySelector(".preview-region");
     var textbox = document.querySelector("._45m_._2vxa");
     var content = textbox.firstChild.firstChild.textContent;
-    if (content != "") {
+    var lasttoken = content.trim().split(']').pop();
+    var endpart = lasttoken.trim().split('[');
+    var results = [];
+
+    if (endpart.length > 1) {
+      var opentoken = endpart.pop();
+      var n = content.lastIndexOf(opentoken);
+      var partial = content.slice(0,n-1);
+
       autoarea.style.display = "block";
       preview.style.display = "block";
-      var words = content.trim().split(' ');
-      var lastword = words.pop();
-      var queries = [lastword];
-      
-      var depth = 4;
-      for(var j = depth; j > 0 && words.length > 0; j--) {
-        var nextword = words.pop() + " " + lastword;
-        queries = queries.concat(nextword);
-        lastword = nextword;
-      }
-      
-      var results = [];
-      for(var j = queries.length-1; j >= 0; j--) {
-        results = results.concat(trie.find(TrieString(queries[j])));
-      }
+      var words = opentoken.trim().split(' ');
+      var lastword = TrieString(words.pop());
+      if (lastword.length > 0) {
+        var queries = [lastword];
+        
+        var depth = 4;
+        for(var j = depth; j > 0 && words.length > 0; j--) {
+          var nextword = TrieString(words.pop()) + "_" + lastword;
+          queries = queries.concat(nextword);
+          lastword = nextword;
+        }
 
-      SetAutocomplete(results);
+        
+        for(var j = queries.length-1; j >= 0; j--) {
+          var partialres = trie.find(queries[j]);
+          if (partialres != undefined) {
+            for(var k = 0; k < partialres.length; k++) {
+              if (partialres[k].type == keytype) {
+                results = results.concat(partialres[k]);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    if (results.length > 0) {
+      SetAutocomplete(results, partial);
     } else {
       autoarea.style.display = "none";
       preview.style.display = "none";
@@ -126,7 +171,7 @@ function CallbackMTG() {
     var stickerPattern = /^\[[^\[\]]+\]$/i
     if (stickerPattern.test(elem.innerHTML)) {
       var safeclass = SafeCSSClass(elem.innerHTML)
-      elem.innerHTML = '<div class="sticker ' + safeclass + '"></a>'
+      elem.innerHTML = '<div class="sticker ' + safeclass + '"></div>'
       elem.parentNode.style.cssText = 'padding: 0; background-color:transparent !important';
     } else {
       if (elem.innerHTML.indexOf('</a>') == -1) {

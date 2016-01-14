@@ -90,16 +90,22 @@ function SafeCSSClass(name) {
   });
 }
 
-function setupTrieAndCSS(page) {
-	page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'trie.js'), 'utf8'));
-	var jsfull = "var trie = new Triejs({sort: function() {this.sort(function(a, b) {return a.name.localeCompare(b.name);})}});";
+function setupTrieAndCSS(page, jsonpath, extracss, type) {
+	var jsfull = "";
 	var cssfull = "";
-	const lib = JSON.parse(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.json'), 'utf8'));
+	const lib = JSON.parse(fs.readFileSync(path.join(__dirname, jsonpath), 'utf8'));
+	var count = 0;
+	var closed = true;
 	for (var i = 0; i < lib.length; i++) {
 		var bundleId = lib[i]["bundleId"];
 		var ext = lib[i]["ext"];
 		var sublib = lib[i]["assets"];
 		for( var j = 0; j < sublib.length; j++) {
+			// Hacky "async" optimization to not lock UI
+			if (count % 100 == 0) {
+				jsfull += "setTimeout(function() {";
+				closed = false;
+			}
 			var name = sublib[j]["name"];
 			var words = name.trim().split(' ');
 			var lastword = "";
@@ -112,19 +118,27 @@ function setupTrieAndCSS(page) {
 						TrieString(nextword) + 
 						'", {name: "' + 
 						name.replace(/"/g, '\\"') + 
-						'"});';
+						'", type: "' + type + '"});';
 					jsfull += jsline;
 				}
 				lastword = nextword;
 			}
 			var cssline = ".tooltip." + SafeCSSClass(name) +
 				":before,.sticker." + SafeCSSClass(name) + 
-				"{background-image:url('https://s3-us-west-1.amazonaws.com/ggchat/" + bundleId + 
+				"{" + extracss + "background-image:url('https://s3-us-west-1.amazonaws.com/ggchat/" + bundleId + 
 				"/" +  sublib[j]["id"] + "." + ext + "')}";
 			cssfull += cssline;
+			if (count % 100 == 99) {
+				jsfull += "}, " + (count - count % 100) / 2 + ");"
+				closed = true;
+			}
+			count++;
 		}
 	}
 	page.insertCSS(cssfull);
+	if (!closed) {
+		jsfull += "}, " + (i - i % 100) + ");"
+	}
 	page.executeJavaScript(jsfull);
 	//page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.js'), 'utf8'));
 }
@@ -141,7 +155,10 @@ app.on('ready', () => {
 	page.on('dom-ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
 		//page.insertCSS(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.css'), 'utf8'));
-		setupTrieAndCSS(page);
+		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'trie.js'), 'utf8'));
+		page.executeJavaScript("var trie = new Triejs({sort: function() {this.sort(function(a, b) {return a.name.localeCompare(b.name);})}});");
+		setupTrieAndCSS(page, "mtg_en_v4.json", "height:328px;width:230px;", "mtg");
+		setupTrieAndCSS(page, "hearthstone_en.json", "height:348px;width:230px;", "hearthstone");
 		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'load.js'), 'utf8'));
 		mainWindow.show();
 	});
@@ -152,7 +169,7 @@ app.on('ready', () => {
 	});
 
 	page.on('did-frame-finish-load', (e, url) => {
-		page.executeJavaScript('CreateKeyboard();CallbackMTG();ScrollDown();');
+		page.executeJavaScript('CreateKeyboard("mtg");CallbackMTG();ScrollDown();');
 	});
 });
 
