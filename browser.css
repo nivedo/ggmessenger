@@ -129,11 +129,19 @@ time._3oh- {
   background-position: center;
 }
 
-.key-icon.mtg {
-  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/mtg_icon.png");
+.icon {
+  width: 50px;
+  height: 50px;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.key-icon.hearthstone {
+.icon.mtg {
+  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/mtg_icon.png");
+  background-size: 60%;
+}
+
+.icon.hearthstone {
   background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/hearthstone_icon.png");
   background-size: 80%;
 }
@@ -142,7 +150,7 @@ time._3oh- {
   width: 220px;
   height: 333px;
   position: absolute;
-  top: -476px;
+  top: -490px;
   left: -2px;
   z-index: 99;
   background: transparent;
@@ -177,10 +185,24 @@ time._3oh- {
 }
 */
 .auto-region ul li {
-  color: #0077e5 !important;
   font-size: 1em;
   padding: 0.5em 1em;
   /*border-top: 1px solid rgba(0,0,0,0.1);*/
+}
+
+.auto-region ul li:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+.auto-region ul li a {
+  display: block;
+  color: #0077e5 !important;
+  height: 100%;
+  width: 100%;
+}
+
+.auto-region ul li a:hover {
+  text-decoration: none;
 }
 
 .auto-region ul li:first-of-type {

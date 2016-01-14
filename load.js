@@ -25,29 +25,32 @@ function ScrollDown() {
 
 function CreateKeyboard(default_type) {
   var inputbox = document.querySelector("._5irm");
+  var iconwrap = document.createElement("div");
+  iconwrap.className = "key-icon";
   var iconbox = document.createElement("div");
-  iconbox.className = "key-icon " + default_type;
+  iconbox.className = "icon " + default_type;
   iconbox.alt = default_type;
   iconbox.onclick = function() {
-    if (this.className == "key-icon mtg") {
-      this.className = "key-icon hearthstone";
+    if (this.className == "icon mtg") {
+      this.className = "icon hearthstone";
       this.alt = "hearthstone";
     } else {
-      this.className = "key-icon mtg";
+      this.className = "icon mtg";
       this.alt = "mtg";
     }
   }
+  iconwrap.appendChild(iconbox);
   var autoarea = document.createElement("div");
   autoarea.className = "auto-region";
   var autoul = document.createElement("ul");
   autoarea.appendChild(autoul);
-  iconbox.appendChild(autoarea);
+  iconwrap.appendChild(autoarea);
   var preview = document.createElement("div");
   preview.className = "preview-region";
-  iconbox.appendChild(preview);
+  iconwrap.appendChild(preview);
   var parent = inputbox.parentNode;
   if (parent.firstChild.className.split(' ')[0] != "key-icon") {
-    inputbox.parentNode.insertBefore(iconbox, inputbox);
+    inputbox.parentNode.insertBefore(iconwrap, inputbox);
   }
   SetKeyboardEvents();
 }
@@ -71,23 +74,28 @@ function SetAutocomplete(results, partial) {
     if (results[i] != undefined && names.indexOf(results[i]["name"]) < 0) {
       names = names.concat(results[i]["name"]);
       var li = document.createElement("li");
-      li.textContent = results[i]["name"];
-      li.onmouseover = function() {
+      var link = document.createElement("a");
+      link.textContent = results[i]["name"];
+      link.onmouseover = function() {
         preview.className = "preview-region sticker " + SafeCSSClass(this.textContent);
       };
-      li.onmouseout = function() {
+      link.onmouseout = function() {
         preview.className = "preview-region";
       };
-      /*
-      li.onclick = function() {
+      
+      link.onclick = function() {
         var partial = document.querySelector(".auto-region").alt;
         var textbox = document.querySelector("._45m_._2vxa");
-        textbox.firstChild.firstChild.textContent = partial + " " + this.textContent;
+        var tmp = textbox[Object.getOwnPropertyNames(textbox)[0]]._currentElement._owner._currentElement._owner._currentElement._owner._currentElement._owner._instance;
+        //tmp._sendMessage()
+        tmp.props.onMessageSend("[" + this.textContent + "]")
+        //textbox.firstChild.firstChild.textContent = partial + " " + this.textContent;
+        
         preview.className = "preview-region";
         autoarea.style.display = "none";
         preview.style.display = "none";
       };
-      */
+      li.appendChild(link);
       //li.className = "tooltip " + SafeCSSClass(results[i]["name"]);
       autoul.appendChild(li);
       noresults = false;
@@ -102,7 +110,7 @@ function SetAutocomplete(results, partial) {
 }
 
 function SetKeyboardType(keytype) {
-  document.querySelector(".key-icon").alt = keytype;
+  document.querySelector(".icon").alt = keytype;
 }
 
 function SetKeyboardEvents() {
@@ -113,7 +121,7 @@ function SetKeyboardEvents() {
   }
   document.onkeyup = function (e) {
     ClearAuto();
-    var keytype = document.querySelector(".key-icon").alt;
+    var keytype = document.querySelector(".icon").alt;
     var autoarea = document.querySelector(".auto-region");
     var preview = document.querySelector(".preview-region");
     var textbox = document.querySelector("._45m_._2vxa");
