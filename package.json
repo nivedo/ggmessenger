@@ -1,7 +1,7 @@
 {
   "name": "ggmessenger",
   "productName": "GGMessenger",
-  "version": "0.1.8",
+  "version": "0.2.1",
   "description": "Unofficial Facebook Messenger for Gamers",
   "license": "MIT",
   "repository": "nivedo/ggmessenger",
@@ -10,7 +10,7 @@
     "email": "jayxni@gmail.com",
     "url": "gg.chat"
   },
-  "electronVersion": "0.36.0",
+  "electronVersion": "0.36.4",
   "scripts": {
     "test": "xo",
     "start": "electron .",
@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "electron-packager": "^5.2.0",
-    "electron-prebuilt": "^0.36.0",
+    "electron-prebuilt": "^0.36.4",
     "xo": "*"
   },
   "xo": {

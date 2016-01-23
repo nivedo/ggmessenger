@@ -35,3 +35,7 @@ Notification.prototype = NativeNotification.prototype;
 Notification.permission = NativeNotification.permission;
 Notification.requestPermission = NativeNotification.requestPermission.bind(Notification);
 /* eslint-enable no-native-reassign, no-undef */
+
+const webFrame = require('electron').webFrame;
+webFrame.registerURLSchemeAsBypassingCSP("https");
+webFrame.registerURLSchemeAsBypassingCSP("http");

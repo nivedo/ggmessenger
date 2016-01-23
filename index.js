@@ -68,7 +68,7 @@ function createMainWindow() {
 
 	return win;
 }
-
+/*
 function TrieString(name) {
   return name.trim().replace(/[^a-z0-9]/g, function(s) {
     var c = s.charCodeAt(0);
@@ -125,7 +125,7 @@ function setupTrieAndCSS(page, jsonpath, extracss, type) {
 			}
 			var cssline = ".tooltip." + SafeCSSClass(name) +
 				":before,.sticker." + SafeCSSClass(name) + 
-				"{" + extracss + "background-image:url('https://s3-us-west-1.amazonaws.com/ggchat/" + bundleId + 
+				"{" + extracss + "background-image:url('https://d1fyt5lxvxva06.cloudfront.net/" + bundleId + 
 				"/" +  sublib[j]["id"] + "." + ext + "')}";
 			cssfull += cssline;
 			if (count % 100 == 99) {
@@ -142,7 +142,7 @@ function setupTrieAndCSS(page, jsonpath, extracss, type) {
 	page.executeJavaScript(jsfull);
 	//page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.js'), 'utf8'));
 }
-
+*/
 app.on('ready', () => {
 	electron.Menu.setApplicationMenu(appMenu);
 
@@ -154,12 +154,13 @@ app.on('ready', () => {
 
 	page.on('dom-ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
-		//page.insertCSS(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.css'), 'utf8'));
 		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'trie.js'), 'utf8'));
-		page.executeJavaScript("var trie = new Triejs({sort: function() {this.sort(function(a, b) {return a.name.localeCompare(b.name);})}});");
-		setupTrieAndCSS(page, "mtg_en_v4.json", "height:328px;width:230px;", "mtg");
-		setupTrieAndCSS(page, "hearthstone_en.json", "height:348px;width:230px;", "hearthstone");
-		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'load.js'), 'utf8'));
+		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'preload.js'), 'utf8'));
+		page.executeJavaScript("loadPluginFromJSON('https://d1fyt5lxvxva06.cloudfront.net/config/mtg_en_v4.json','height:328px;width:230px;','mtg');");
+		page.executeJavaScript("loadPluginFromJSON('https://d1fyt5lxvxva06.cloudfront.net/config/hearthstone_en.json','height:348px;width:230px;','hs');");
+		//setupTrieAndCSS(page, "mtg_en_v4.json", "height:328px;width:230px;", "mtg");
+		//setupTrieAndCSS(page, "hearthstone_en.json", "height:348px;width:230px;", "hearthstone");
+		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'observe.js'), 'utf8'));
 		mainWindow.show();
 	});
 

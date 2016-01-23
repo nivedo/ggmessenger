@@ -74,7 +74,7 @@ time._3oh- {
 }
 
 ._20bp .tooltip {
-	background: transparent !important;
+	background: transparent;
 	text-decoration: none !important;
 	font-style: normal !important;
 	color: #0077e5 !important;
@@ -82,7 +82,7 @@ time._3oh- {
 }
 
 .tooltip:hover {
-	background: transparent !important;
+	background: transparent;
 }
 
 ._nd_ ._hh7 {
@@ -95,6 +95,11 @@ time._3oh- {
 
 ._nd_ ._hh7 a {
   color: #0077e5 !important;
+}
+
+.hidecard ._15gf {
+  display: none !important;
+}
 }
 
 ._4_j5._4t9y {
@@ -110,6 +115,94 @@ time._3oh- {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.sticker ul.mtg {
+  position: relative;
+  top: 10px;
+  left: 230px;
+}
+
+._nd_ .sticker ul.mtg {
+  left:-45px;
+}
+
+.sticker ul.hs {
+  position: relative;
+  top: 60px;
+  left: 220px;
+}
+
+._nd_ .sticker ul.hs {
+  left:-35px;
+}
+
+.sticker ul li {
+  background-color: rgba(0,0,0,0.45) !important;
+  border-radius: 14px;
+  margin: 5px 10px;
+  width: 28px;
+  height: 28px;
+}
+
+.sticker ul li:hover {
+  background-color: rgba(0,0,0,0.35) !important;
+}
+
+._hh7 .sticker ul li a {
+  display: block;
+  text-decoration: none;
+  color: #eee !important;
+  font-size: 1em;
+  line-height: 28px;
+  width: 100%;
+  text-align: center;
+}
+
+.auto-region ul li a:hover {
+  text-decoration: none;
+}
+
+._nd_ ._hh7 .decktitle, .decktitle {
+  color: #141823 !important;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+._hh7 .titlewrap a {
+  color: #141823 !important;
+  text-decoration: none;
+}
+
+._hh7 .titlewrap a:hover {
+  text-decoration: underline;
+}
+
+._hh7.infocard, ._nd_ ._hh7.infocard {
+  background: transparent !important;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.titlewrap {
+  margin-left: 35px;
+}
+
+.cardlist {
+  margin-top: 10px;
+  margin-left: 35px;
+  overflow: visible;
+}
+
+.cardlist ul {
+  -webkit-column-break-inside: avoid;
+  break-inside: avoid;
+  columns: 3;
+  -webkit-columns: 3;
+  -moz-columns: 3;
+}
+
+.cardlist ul li {
+  overflow: visible;
 }
 
 /* Keyboard */
@@ -141,14 +234,36 @@ time._3oh- {
   background-size: 60%;
 }
 
-.icon.hearthstone {
+.icon.hs {
   background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/hearthstone_icon.png");
   background-size: 80%;
 }
 
+.inline-icon {
+  width: 35px;
+  height: 35px;
+  display: inline-block;
+  position: absolute;
+  top: 7px;
+  margin-left: -5px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.inline-icon.mtg {
+  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/mtg_icon.png");
+  background-size: 80%;
+}
+
+.inline-icon.hs {
+  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/hearthstone_icon.png");
+  background-size: 100%;
+}
+
+
 .preview-region {
   width: 220px;
-  height: 333px;
+  height: 0px;
   position: absolute;
   top: -490px;
   left: -2px;
@@ -185,8 +300,6 @@ time._3oh- {
 }
 */
 .auto-region ul li {
-  font-size: 1em;
-  padding: 0.5em 1em;
   /*border-top: 1px solid rgba(0,0,0,0.1);*/
 }
 
@@ -197,6 +310,8 @@ time._3oh- {
 .auto-region ul li a {
   display: block;
   color: #0077e5 !important;
+  font-size: 1em;
+  padding: 0.5em 1em;
   height: 100%;
   width: 100%;
 }
@@ -218,6 +333,12 @@ time._3oh- {
   position: relative;
   z-index: 2;
   cursor: pointer;
+  text-transform: capitalize;
+  background-size: 0% !important;
+}
+
+.tooltip:hover {
+  text-decoration: underline !important;
 }
 
 /* Hide the tooltip content by default */
@@ -243,21 +364,24 @@ time._3oh- {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 8px;
-  background-color: #000;
-  background-color: hsla(0, 0%, 20%, 0.0);
   color: #fff;
   content: "";
-  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/missing.jpg");
+  /*background-image: attr(data-attr) !important;*/
+  background-color: #000;
+  background-color: hsla(0, 0%, 0%, 0.0);
+  background: inherit;
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center;
   text-align: center;
   font-size: 14px;
   line-height: 1.2;
-
+  overflow: visible;
+  /*
   -moz-box-shadow:5px 5px 5px rgba(0,0,0,0.3);
 	-webkit-box-shadow:5px 5px 5px rgba(0,0,0,0.3);
 	box-shadow:5px 5px 5px rgba(0,0,0,0.3);
+  */
 }
 
 .tooltip.right:before {
