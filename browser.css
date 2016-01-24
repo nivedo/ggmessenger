@@ -89,7 +89,7 @@ time._3oh- {
   /*
   background-color: #cfd8dc !important;
   */
-  background-color: #CEEF9E !important;
+  background-color: #E6EBD5 !important;
   color: #141823 !important;
 }
 
@@ -189,20 +189,26 @@ time._3oh- {
 
 .cardlist {
   margin-top: 10px;
+  margin-bottom: 10px;
   margin-left: 35px;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .cardlist ul {
   -webkit-column-break-inside: avoid;
   break-inside: avoid;
-  columns: 3;
-  -webkit-columns: 3;
-  -moz-columns: 3;
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
 }
 
 .cardlist ul li {
-  overflow: visible;
+  text-overflow: ellipsis;
+}
+
+.cardlist ul li.separator {
+  font-style: italic;
+  padding: 0.5em 0;
 }
 
 /* Keyboard */
@@ -260,6 +266,41 @@ time._3oh- {
   background-size: 100%;
 }
 
+.inline-wrap {
+  position: relative;
+  right: 0;
+  width: 100%;
+  height: 0;
+}
+
+._nd_ .inline-wrap {
+  left: 0;
+}
+
+.inline-preview {
+  width: 140px;
+  height: 0px;
+  position: absolute;
+  display: inline-block;
+  top: 0px;
+  right: 0px;
+  margin-right: -250px;
+  z-index: 99;
+  background: transparent;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+._nd_ .inline-preview {
+  left: 0px;
+  margin-left: -250px;
+  margin-right: 0px;
+}
+
+.inline-preview.hs {
+  margin-top: -50px;
+}
 
 .preview-region {
   width: 220px;
@@ -334,7 +375,12 @@ time._3oh- {
   z-index: 2;
   cursor: pointer;
   text-transform: capitalize;
+  font-weight: bold;
   background-size: 0% !important;
+}
+
+.tooltip.noshow {
+  font-weight: normal;
 }
 
 .tooltip:hover {

@@ -32,7 +32,8 @@ function RandomGUID() {
 }
 
 function ScrollDown() {
-  var s = document.querySelector("._4_j4 .scrollable");s.scrollTop = s.scrollHeight;
+    var s = document.querySelector("._4_j4 .scrollable");
+    s.scrollTop = s.scrollHeight;
 }
 
 function CreateKeyboard(default_type) {
@@ -205,85 +206,184 @@ function SetKeyboardEvents() {
   };
 }
 
+var urlcount = 0;
+
 function ParseURL(url, elemid, type) {
+  if (url in cachemap) {
+    //CreateCardFromCache(url, elemid);
+    setTimeout(function(a,b) { CreateCardFromCache(a,b); }, 0, url, elemid);
+    return;
+  }
   var xhr = new XMLHttpRequest();
   xhr.open("GET", url, true);
   xhr.onload = function (e) {
+    urlcount--;
     if(this.status == 200 || this.status == 304) {
+      var cleanresp = this.responseText.replace(/<script(.|\s)*?\/script>/g, '');
+      cleanresp = cleanresp.replace(/<img(.|\s)*?>/g, '');
       if(type == "tappedout") {
-        CreateTappedoutCard(this.responseText, elemid);
+        cachemap[url] = CreateTappedoutCard(cleanresp, elemid);
       }
       if(type == "mtggoldfish") {
-        CreateMtggoldfishCard(this.responseText, elemid);
+        cachemap[url] = CreateMtggoldfishCard(cleanresp, elemid);
       }
       if(type == "mtgsalvation") {
-        CreateMTGSalvationCard(this.responseText, elemid);
+        cachemap[url] = CreateMTGSalvationCard(cleanresp, elemid);
+      }
+      if(type == "channelfireball") {
+        cachemap[url] = CreateChannelFireballCard(cleanresp, elemid);
       }
       if(type == "hearthpwn") {
-        CreateHearthpwnCard(this.responseText, elemid);
+        cachemap[url] = CreateHearthpwnCard(cleanresp, elemid);
       }
+      if(type == "tempostorm") {
+        cachemap[url] = CreateTempostormCard(cleanresp, elemid);
+      }
+      FixTooltips();
+      ScrollDown();
     }
   };
+  urlcount++;
   xhr.send(null);
+}
+
+function CreateCardFromCache(url, elemid) {
+  var elem = document.getElementById(elemid);
+  elem.innerHTML = cachemap[url];
+  FixTooltips();
+  ScrollDown();
+
+  return elem.innerHTML;
 }
 
 function CreateHearthpwnCard(result, elemid) {
   var elem = document.getElementById(elemid);
-  var myHTML = this.responseText;
   var tempDiv = document.createElement('div');
-  tempDiv.innerHTML = result.replace(/<script(.|\s)*?\/script>/g, '');
+  tempDiv.innerHTML = result;
 
   var title = tempDiv.querySelector("title");
-  var members = tempDiv.querySelectorAll(".col-name b a");
+  var members = tempDiv.querySelectorAll(".col-name b a, .t-deck-details-card-list.class-listing h4, .t-deck-details-card-list.neutral-listing h4");
 
-  var deckstr = "<div class='inline-icon hs'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
+  var deckstr = "<div class='inline-wrap'><div class='inline-preview hs'></div></div>" + 
+    "<div class='inline-icon hs'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
     elem.firstChild.innerHTML + "'>" + title.textContent + "</a>\n<span>via <a href='http://www.hearthpwn.com'>Hearthpwn.com</a></span></div><div class='cardlist'><ul>";
   for(j = 0; j < members.length; j++) {
-    var name = members[j].innerHTML.trim();
-    var qty = members[j].getAttribute("data-count");
-    deckstr = deckstr + "<li>" + (qty + "x [hs::" + name + "]\n</li>");
+    if (members[j].nodeName == "H4") {
+      deckstr = deckstr + "<li class='separator'>" + members[j].innerHTML.trim() + "</li>";
+    } else {
+      var name = members[j].innerHTML.trim();
+      var qty = members[j].getAttribute("data-count");
+      deckstr = deckstr + "<li>" + (qty + "x [hs::" + name + "]\n</li>");
+    }
   }
   deckstr += "</ul></div>";
   elem.innerHTML = deckstr;
-  elem.innerHTML = elem.innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, '<a class="tooltip noshow" target="_blank" rel="$1">$2</a>');
-  ScrollDown();
-  FixTooltips();
+  elem.innerHTML = elem.innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, '<a class="tooltip noshow" data-preview="' + elemid + '" target="_blank" rel="$1">$2</a>');
+  
+  return elem.innerHTML;
 }
 
-function CreateTappedoutCard(result, elemid) {
+function CreateTempostormCard(result, elemid) {
   var elem = document.getElementById(elemid);
-  var myHTML = this.responseText;
   var tempDiv = document.createElement('div');
-  tempDiv.innerHTML = result.replace(/<script(.|\s)*?\/script>/g, '');
+  tempDiv.innerHTML = result;
 
   var title = tempDiv.querySelector("title");
+  var qtys = tempDiv.querySelectorAll(".db-deck-card-qty");
+  var members = tempDiv.querySelectorAll(".db-deck-card-name");
 
-  var members = tempDiv.querySelectorAll(".boardlist .member .qty.board");
-  var deckstr = "<div class='inline-icon mtg'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
-    elem.firstChild.innerHTML + "'>" + title.textContent + "</a>\n<span>via <a href='http://www.tappedout.net'>Tappedout.net</a></span></div><div class='cardlist'><ul>";
+  var deckstr = "<div class='inline-wrap'><div class='inline-preview'></div></div>" + 
+    "<div class='inline-icon hs'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
+    elem.firstChild.innerHTML + "'>" + title.textContent + "</a>\n<span>via <a href='http://www.tempostorm.com'>Tempostorm.com</a></span></div><div class='cardlist'><ul>";
   for(j = 0; j < members.length; j++) {
-    var name = members[j].getAttribute('data-name');
-    var qty = members[j].getAttribute('data-quantity');
+    var name = members[j].innerHTML.trim();
+    var qty = qtys[j].innerHTML.trim();
     deckstr = deckstr + "<li>" + (qty + "x [mtg::" + name + "]\n</li>");
   }
   deckstr += "</ul></div>";
   elem.innerHTML = deckstr;
-  elem.innerHTML = elem.innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, '<a class="tooltip noshow" target="_blank" rel="$1">$2</a>');
-  ScrollDown();
-  FixTooltips();
+  elem.innerHTML = elem.innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, '<a class="tooltip noshow" data-preview="' + elemid + '" target="_blank" rel="$1">$2</a>');
+
+  return elem.innerHTML;
+}
+
+function CreateChannelFireballCard(result, elemid) {
+  var elem = document.getElementById(elemid);
+  var tempDiv = document.createElement('div');
+  tempDiv.innerHTML = result;
+
+  var title = tempDiv.querySelector("title");
+  var decklist = tempDiv.querySelector(".crystal-catalog-helper.crystal-catalog-helper-list");
+  var deckname = decklist.previousSibling.previousSibling.innerHTML;
+  if (deckname == undefined) {
+    deckname = title;
+  }
+  var members = decklist.querySelectorAll("a.crystal-catalog-helper-list-item, span.crystal-catalog-helper-subtitle");
+  var deckstr = "<div class='inline-wrap'><div class='inline-preview'></div></div>" + 
+    "<div class='inline-icon mtg'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
+    elem.firstChild.innerHTML + "'>" + deckname + "</a>\n<span>via <a href='http://www.channelfireball.com'>ChannelFireball.com</a></span></div><div class='cardlist'><ul>";
+  for(j = 0; j < members.length; j++) {
+    if (members[j].nodeName == "SPAN") {
+      deckstr = deckstr + "<li class='separator'>" + members[j].innerHTML.trim() + "</li>";
+    } else {
+      var name = members[j].getAttribute('data-name');
+      var qty = members[j].querySelector(".qty").innerHTML;
+      deckstr = deckstr + "<li>" + (qty + "x [mtg::" + name + "]\n</li>");
+    }
+  }
+  deckstr += "</ul></div>";
+  elem.innerHTML = deckstr;
+  elem.innerHTML = elem.innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, '<a class="tooltip noshow" data-preview="' + elemid + '" target="_blank" rel="$1">$2</a>');
+
+  return elem.innerHTML;
+}
+
+function CreateTappedoutCard(result, elemid) {
+  var elem = document.getElementById(elemid);
+  var tempDiv = document.createElement('div');
+  tempDiv.innerHTML = result;
+
+  var title = tempDiv.querySelector("title");
+
+  var members = tempDiv.querySelectorAll(".boardlist .member .qty.board, .board-col h3, .board-col a[href*='mtg-card']:not([rel])");
+  var deckstr = "<div class='inline-wrap'><div class='inline-preview'></div></div>" + 
+    "<div class='inline-icon mtg'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
+    elem.firstChild.innerHTML + "'>" + title.textContent + "</a>\n<span>via <a href='http://www.tappedout.net'>Tappedout.net</a></span></div><div class='cardlist'><ul>";
+  for(j = 0; j < members.length; j++) {
+    if (members[j].nodeName == "H3") {
+      deckstr = deckstr + "<li class='separator'>" + members[j].innerHTML.trim() + "</li>";
+    } else {
+      if (members[j].getAttribute("href") != "#") {
+        var name = members[j].getAttribute("href");
+        name = name.replace("/mtg-card/",'');
+        name = name.replace("/",'');
+        name = name.split("-").join(' ');
+        deckstr = deckstr + "<li>[mtg::" + name + "]\n</li>";
+      } else {
+        var name = members[j].getAttribute('data-name');
+        var qty = members[j].getAttribute('data-quantity');
+        deckstr = deckstr + "<li>" + (qty + "x [mtg::" + name + "]\n</li>");
+      }
+    }
+  }
+  deckstr += "</ul></div>";
+  elem.innerHTML = deckstr;
+  elem.innerHTML = elem.innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, '<a class="tooltip noshow" data-preview="' + elemid + '" target="_blank" rel="$1">$2</a>');
+
+  return elem.innerHTML;
 }
 
 function CreateMtggoldfishCard(result, elemid) {
   var elem = document.getElementById(elemid);
-  var myHTML = this.responseText;
   var tempDiv = document.createElement('div');
-  tempDiv.innerHTML = result.replace(/<script(.|\s)*?\/script>/g, '');
+  tempDiv.innerHTML = result;
 
   var title = tempDiv.querySelector("title");
   var qtys = tempDiv.querySelectorAll(".deck-view-deck-table tbody tr .deck-col-qty");
   var members = tempDiv.querySelectorAll(".deck-view-deck-table tbody tr .deck-col-card a");
 
-  var deckstr = "<div class='inline-icon mtg'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
+  var deckstr = "<div class='inline-wrap'><div class='inline-preview'></div></div>" + 
+    "<div class='inline-icon mtg'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
     elem.firstChild.innerHTML + "'>" + title.textContent + "</a>\n<span>via <a href='http://www.mtggoldfish.com'>MTGGoldfish.com</a></span></div><div class='cardlist'><ul>";
   for(j = 0; j < members.length; j++) {
     var name = members[j].innerHTML.trim();
@@ -292,23 +392,23 @@ function CreateMtggoldfishCard(result, elemid) {
   }
   deckstr += "</ul></div>";
   elem.innerHTML = deckstr;
-  elem.innerHTML = elem.innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, '<a class="tooltip noshow" target="_blank" rel="$1">$2</a>');
-  ScrollDown();
-  FixTooltips();
+  elem.innerHTML = elem.innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, '<a class="tooltip noshow" data-preview="' + elemid + '" target="_blank" rel="$1">$2</a>');
+
+  return elem.innerHTML;
 }
 
 function CreateMTGSalvationCard(result, elemid) {
   var elem = document.getElementById(elemid);
-  var myHTML = this.responseText;
   var tempDiv = document.createElement('div');
-  tempDiv.innerHTML = result.replace(/<script(.|\s)*?\/script>/g, '');
+  tempDiv.innerHTML = result;
 
   var deckwrap = tempDiv.querySelector(".forum-deck-wrapper .deck");
   var deckinfo = JSON.parse(deckwrap.getAttribute("data-card-list"));
   var members = deckinfo["Deck"];
   var title = tempDiv.querySelector("header.caption-threads h2");
 
-  var deckstr = "<div class='inline-icon mtg'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
+  var deckstr = "<div class='inline-wrap'><div class='inline-preview'></div></div>" + 
+   "<div class='inline-icon mtg'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
     elem.firstChild.innerHTML + "'>" + title.textContent + "</a>\n<span>" + deckinfo["Name"] + " via <a href='http://www.mtgsalvation.com'>MTGSalvation.com</a></span></div><div class='cardlist'><ul>";
   for(j = 0; j < members.length; j++) {
     var name = members[j]["CardName"];
@@ -317,9 +417,9 @@ function CreateMTGSalvationCard(result, elemid) {
   }
   deckstr += "</ul></div>";
   elem.innerHTML = deckstr;
-  elem.innerHTML = elem.innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, '<a class="tooltip noshow" target="_blank" rel="$1">$2</a>');
-  ScrollDown();
-  FixTooltips();
+  elem.innerHTML = elem.innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, '<a class="tooltip noshow" data-preview="' + elemid + '" target="_blank" rel="$1">$2</a>');
+
+  return elem.innerHTML;
 }
 
 function CallbackMTG() {
@@ -372,12 +472,26 @@ function CallbackMTG() {
           elem.parentNode.parentNode.className += " hidecard";
           ParseURL(elem.firstChild.innerHTML, elem.id, "mtgsalvation");
         }
+        if (elem.innerHTML.indexOf('channelfireball.com') > 0) {
+          elem.setAttribute("data-type","channelfireball");
+          elem.id = RandomGUID();
+          elem.parentNode.parentNode.className += " hidecard";
+          ParseURL(elem.firstChild.innerHTML, elem.id, "channelfireball");
+        }
         if (elem.innerHTML.indexOf('hearthpwn.com/decks') > 0) {
           elem.setAttribute("data-type","hearthpwn");
           elem.id = RandomGUID();
           elem.parentNode.parentNode.className += " hidecard";
           ParseURL(elem.firstChild.innerHTML, elem.id, "hearthpwn");
         }
+        /*
+        if (elem.innerHTML.indexOf('tempostorm.com/hearthstone/decks') > 0) {
+          elem.setAttribute("data-type","tempostorm");
+          elem.id = RandomGUID();
+          elem.parentNode.parentNode.className += " hidecard";
+          ParseURL(elem.firstChild.innerHTML, elem.id, "tempostorm");
+        }
+        */
       }
     }
   }
@@ -404,8 +518,22 @@ function FixTooltips() {
       if (tooltips[i].rel == "hs") {
         tooltips[i].href = "http://www.hearthpwn.com/cards?filter-name=" + encodeURIComponent(tooltips[i].textContent);
       }
-      if(!hasClass(tooltips[i], "noshow")) {
-        tooltips[i].textContent = '[' + tooltips[i].textContent + ']';
+      if(hasClass(tooltips[i], "noshow") && tooltips[i].hasAttribute("data-preview")) {
+        tooltips[i].onmouseover = function() {
+          var elem = this.closest('span._3oh-');
+          var inpreview = elem.querySelector(".inline-preview");
+          var safeclass = SafeCSSClass(this.textContent, this.rel);
+          inpreview.className += " sticker";
+          inpreview.style.cssText = stylemap[safeclass];
+        }
+        tooltips[i].onmouseout = function() {
+          var elem = this.closest('span._3oh-');
+          var inpreview = elem.querySelector(".inline-preview");
+          inpreview.className = inpreview.className.replace("sticker","");
+          inpreview.style.cssText = "";
+        }
+      } else {
+        tooltips[i].textContent = tooltips[i].textContent;
         tooltips[i].onmouseover = function() {
           var safeclass = SafeCSSClass(this.textContent, this.rel);
           this.style.cssText = stylemap[safeclass];
@@ -485,5 +613,6 @@ function loadHelper(lib, extracss, type) {
 
 var trie = {};
 var stylemap = {};
+var cachemap = {};
 var libnum = 0;
 var libload = 0;
