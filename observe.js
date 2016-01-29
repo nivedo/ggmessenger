@@ -22,6 +22,6 @@ var observeDOM = (function(){
 })();
 
 // Observe a specific DOM element:
-observeDOM( document.querySelector('._1q5-') ,function(){ 
+observeDOM( document.querySelector('._1q5-') ,function(){
   CallbackMTG()
 });

@@ -7,6 +7,8 @@ const app = electron.app;
 const appMenu = require('./menu');
 const storage = require('./storage');
 const createTray = require('./tray');
+const handler = require('./handler');
+const library = require('./library');
 
 require('electron-debug')();
 require('electron-dl')();
@@ -68,81 +70,7 @@ function createMainWindow() {
 
 	return win;
 }
-/*
-function TrieString(name) {
-  return name.trim().replace(/[^a-z0-9]/g, function(s) {
-    var c = s.charCodeAt(0);
-    if (c == 32) return '_';
-    if (c == 198) return "ae";
-    if (c == 91 || c == 93) return ''; // remove [] brackets
-    if (c >= 65 && c <= 90) return s.toLowerCase(); // convert upper to lowercase
-    return '' // everything else becomes dash
-  });
-}
 
-function SafeCSSClass(name) {
-  return name.trim().replace(/[^a-z0-9]/g, function(s) {
-    var c = s.charCodeAt(0);
-    if (c == 198) return "ae";
-    if (c == 91 || c == 93) return ''; // remove [] brackets
-    if (c >= 65 && c <= 90) return s.toLowerCase(); // convert upper to lowercase
-    return '-' // everything else becomes dash
-  });
-}
-
-function setupTrieAndCSS(page, jsonpath, extracss, type) {
-	var jsfull = "";
-	var cssfull = "";
-	const lib = JSON.parse(fs.readFileSync(path.join(__dirname, jsonpath), 'utf8'));
-	var count = 0;
-	var closed = true;
-	for (var i = 0; i < lib.length; i++) {
-		var bundleId = lib[i]["bundleId"];
-		var ext = lib[i]["ext"];
-		var sublib = lib[i]["assets"];
-		for( var j = 0; j < sublib.length; j++) {
-			// Hacky "async" optimization to not lock UI
-			if (count % 100 == 0) {
-				jsfull += "setTimeout(function() {";
-				closed = false;
-			}
-			var name = sublib[j]["name"];
-			var words = name.trim().split(' ');
-			var lastword = "";
-			while (words.length > 0) {
-				var word = words.pop();
-				var nextword = word + " " + lastword;
-				// longer word, or beginning of word, add to trie
-				if (word.length > 3 || words.length == 0) {
-					var jsline = 'trie.add("'+ 
-						TrieString(nextword) + 
-						'", {name: "' + 
-						name.replace(/"/g, '\\"') + 
-						'", type: "' + type + '"});';
-					jsfull += jsline;
-				}
-				lastword = nextword;
-			}
-			var cssline = ".tooltip." + SafeCSSClass(name) +
-				":before,.sticker." + SafeCSSClass(name) + 
-				"{" + extracss + "background-image:url('https://d1fyt5lxvxva06.cloudfront.net/" + bundleId + 
-				"/" +  sublib[j]["id"] + "." + ext + "')}";
-			cssfull += cssline;
-			if (count % 100 == 99) {
-				jsfull += "}, " + (count - count % 100) / 2 + ");"
-				closed = true;
-			}
-			count++;
-		}
-	}
-	page.insertCSS(cssfull);
-	if (!closed) {
-		jsfull += "}, " + (i - i % 100) + ");"
-	}
-	page.executeJavaScript(jsfull);
-	//page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'mtg_en_v3.js'), 'utf8'));
-}
-*/
 app.on('ready', () => {
 	electron.Menu.setApplicationMenu(appMenu);
 
@@ -152,14 +80,16 @@ app.on('ready', () => {
 
 	const page = mainWindow.webContents;
 
+	/* TODO: switch library load to read from config file */
+	library.load('https://d1fyt5lxvxva06.cloudfront.net/config/mtg_en_v4.json','height:328px;width:230px;','mtg');
+	library.load('https://d1fyt5lxvxva06.cloudfront.net/config/hearthstone_en.json','height:348px;width:230px;','hs');
+
 	page.on('dom-ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
 		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'trie.js'), 'utf8'));
 		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'preload.js'), 'utf8'));
 		page.executeJavaScript("loadPluginFromJSON('https://d1fyt5lxvxva06.cloudfront.net/config/mtg_en_v4.json','height:328px;width:230px;','mtg');");
 		page.executeJavaScript("loadPluginFromJSON('https://d1fyt5lxvxva06.cloudfront.net/config/hearthstone_en.json','height:348px;width:230px;','hs');");
-		//setupTrieAndCSS(page, "mtg_en_v4.json", "height:328px;width:230px;", "mtg");
-		//setupTrieAndCSS(page, "hearthstone_en.json", "height:348px;width:230px;", "hearthstone");
 		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'observe.js'), 'utf8'));
 		mainWindow.show();
 	});
@@ -170,7 +100,10 @@ app.on('ready', () => {
 	});
 
 	page.on('did-frame-finish-load', (e, url) => {
-		page.executeJavaScript('CreateKeyboard("mtg");CallbackMTG();ScrollDown();');
+		page.executeJavaScript('CallbackMTG();');
+		page.send('create-keyboard',['mtg']);
+		page.send('refresh-all');
+		page.send('observe-dom');
 	});
 });
 
@@ -186,6 +119,31 @@ app.on('before-quit', () => {
 	}
 });
 
+/* Main thread IPC callbacks */
+
 ipc.on('notification-click', () => {
 	mainWindow.show();
+});
+
+ipc.on('handle-messages', (evt, messages) => {
+	handler.parse(messages);
+	/*
+	var results = [];
+	for(var i = 0; i < messages.length; i++) {
+		var result = handler.parse(messages[i]);
+		if (result != null) {
+			results.push(result);
+		}
+	}
+	mainWindow.send("message-callback", results);
+	var lastid = messages[messages.length-1][0];
+	mainWindow.send("scroll-to", [lastid]);
+	*/
+});
+
+ipc.on('autocomplete', (evt, args) => {
+	var keytype = args[0];
+	var content = args[1];
+	var results = library.autocomplete(keytype, content);
+	mainWindow.send("autocomplete", results);
 });

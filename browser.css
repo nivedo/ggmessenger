@@ -202,6 +202,14 @@ time._3oh- {
   -moz-columns: 2;
 }
 
+@media all and (max-width: 700px) {
+  .cardlist ul {
+    columns: 1;
+    -webkit-columns: 1;
+    -moz-columns: 1;
+  }
+}
+
 .cardlist ul li {
   text-overflow: ellipsis;
 }

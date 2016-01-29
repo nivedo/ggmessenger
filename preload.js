@@ -32,179 +32,13 @@ function RandomGUID() {
 }
 
 function ScrollDown() {
-    var s = document.querySelector("._4_j4 .scrollable");
-    s.scrollTop = s.scrollHeight;
+  /*
+  var s = document.querySelector("._4_j4 .scrollable");
+  s.scrollTop = s.scrollHeight;
+  */
 }
 
-function CreateKeyboard(default_type) {
-  var inputbox = document.querySelector("._5irm");
-  var iconwrap = document.createElement("div");
-  iconwrap.className = "key-icon";
-  var iconbox = document.createElement("div");
-  iconbox.className = "icon " + default_type;
-  iconbox.alt = default_type;
-  iconbox.onclick = function() {
-    if (this.className == "icon mtg") {
-      this.className = "icon hs";
-      this.alt = "hs";
-    } else {
-      this.className = "icon mtg";
-      this.alt = "mtg";
-    }
-  }
-  iconwrap.appendChild(iconbox);
-  var autoarea = document.createElement("div");
-  autoarea.className = "auto-region";
-  var autoul = document.createElement("ul");
-  autoarea.appendChild(autoul);
-  iconwrap.appendChild(autoarea);
-  var preview = document.createElement("div");
-  preview.className = "preview-region";
-  iconwrap.appendChild(preview);
-  var parent = inputbox.parentNode;
-  if (parent.firstChild.className.split(' ')[0] != "key-icon") {
-    inputbox.parentNode.insertBefore(iconwrap, inputbox);
-  }
-  SetKeyboardEvents();
-}
-
-function ClearAuto() {
-  var autoarea = document.querySelector(".auto-region");
-  autoarea.innerHTML = "";
-  var autoul = document.createElement("ul");
-  autoarea.appendChild(autoul);
-}
-
-function SetAutocomplete(results, partial) {
-  var keytype = document.querySelector(".icon").alt;
-  var autoarea = document.querySelector(".auto-region");
-  autoarea.alt = partial;
-  var preview = document.querySelector(".preview-region");
-  autoarea.innerHTML = "";
-  var autoul = document.createElement("ul");
-  var noresults = true;
-  var names = [];
-  for (var i = 0; i < results.length; i++) {
-    if (results[i] != undefined && names.indexOf(results[i]["name"]) < 0) {
-      names = names.concat(results[i]["name"]);
-      var li = document.createElement("li");
-      var link = document.createElement("a");
-      link.textContent = results[i]["name"];
-      link.onmouseover = function() {
-        preview.className = "preview-region sticker " + SafeCSSClass(this.textContent, keytype);
-        preview.style.cssText = stylemap[SafeCSSClass(this.textContent, keytype)];
-      };
-      link.onmouseout = function() {
-        preview.className = "preview-region";
-        preview.style.cssText = "";
-      };
-      
-      link.onclick = function() {
-        var partial = document.querySelector(".auto-region").alt;
-        var textbox = document.querySelector("._45m_._2vxa");
-        var tmp = textbox[Object.getOwnPropertyNames(textbox)[0]]._currentElement._owner._currentElement._owner._currentElement._owner._currentElement._owner._instance;
-        //tmp._sendMessage()
-        tmp.props.onMessageSend("[" + keytype + "::" + this.textContent + "]")
-        tmp._typingDetector.resetState();
-        tmp._resetState(function() {
-          return this._saveCurrentEditorState();
-        });
-        //textbox.firstChild.firstChild.textContent = partial + " " + this.textContent;
-        
-        preview.className = "preview-region";
-        autoarea.style.display = "none";
-        preview.style.display = "none";
-      };
-      li.appendChild(link);
-      //li.className = "tooltip " + SafeCSSClass(results[i]["name"]);
-      autoul.appendChild(li);
-      noresults = false;
-    }
-  }
-  if (noresults) {
-    autoarea.style.display = "none";
-    preview.style.display = "none";
-  } else {
-    autoarea.style.display = "block";
-    preview.style.display = "block";
-  }
-  preview.className = "preview-region";
-  autoarea.appendChild(autoul);
-}
-
-function SetKeyboardType(keytype) {
-  document.querySelector(".icon").alt = keytype;
-}
-
-function SetKeyboardEvents() {
-  document.querySelector("._5irm").onkeydown = function(e) {
-    if (e.keyCode == 13 && !e.shiftKey) {
-      e.preventDefault();
-    }
-  }
-  document.onkeyup = function (e) {
-    ClearAuto();
-    var keytype = document.querySelector(".icon").alt;
-    var autoarea = document.querySelector(".auto-region");
-    var preview = document.querySelector(".preview-region");
-    var textbox = document.querySelector("._45m_._2vxa");
-    var content = textbox.firstChild.firstChild.textContent;
-    var results = [];
-    var partial = '';
-
-    if (content.length > 0 && content.charAt(0) == "@") {
-      var searchstr = TrieString(content.substring(1));
-      var fullres = trie[keytype].find(searchstr);
-      if (fullres != undefined) {
-        for(var k = 0; k < fullres.length; k++) {
-          if (fullres[k].type == keytype) {
-            results = results.concat(fullres[k]);
-          }
-        }
-      }
-    } else {
-      var lasttoken = content.trim().split(']').pop();
-      var endpart = lasttoken.trim().split('[');
-
-      if (endpart.length > 1) {
-        var opentoken = endpart.pop();
-        var n = content.lastIndexOf(opentoken);
-        var partial = content.slice(0,n-1);
-
-        var words = opentoken.trim().split(' ');
-        var lastword = TrieString(words.pop());
-        if (lastword.length > 0) {
-          var queries = [lastword];
-          
-          var depth = 4;
-          for(var j = depth; j > 0 && words.length > 0; j--) {
-            var nextword = TrieString(words.pop()) + "_" + lastword;
-            queries = queries.concat(nextword);
-            lastword = nextword;
-          }
-          
-          for(var j = queries.length-1; j >= 0; j--) {
-            var partialres = trie[keytype].find(queries[j]);
-            if (partialres != undefined) {
-              for(var k = 0; k < partialres.length; k++) {
-                if (partialres[k].type == keytype) {
-                  results = results.concat(partialres[k]);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    if (results.length > 0) {
-      SetAutocomplete(results, partial);
-    } else {
-      autoarea.style.display = "none";
-      preview.style.display = "none";
-    }
-  };
-}
+/* URL Parsing */
 
 var urlcount = 0;
 
@@ -235,6 +69,9 @@ function ParseURL(url, elemid, type) {
       }
       if(type == "hearthpwn") {
         cachemap[url] = CreateHearthpwnCard(cleanresp, elemid);
+      }
+      if(type == "hearthhead") {
+        cachemap[url] = CreateHearthheadCard(cleanresp, elemid);
       }
       if(type == "tempostorm") {
         cachemap[url] = CreateTempostormCard(cleanresp, elemid);
@@ -273,7 +110,38 @@ function CreateHearthpwnCard(result, elemid) {
     } else {
       var name = members[j].innerHTML.trim();
       var qty = members[j].getAttribute("data-count");
-      deckstr = deckstr + "<li>" + (qty + "x [hs::" + name + "]\n</li>");
+      deckstr = deckstr + "<li>" + (qty + "x [hs::" + name + "]</li>");
+    }
+  }
+  deckstr += "</ul></div>";
+  elem.innerHTML = deckstr;
+  elem.innerHTML = elem.innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, '<a class="tooltip noshow" data-preview="' + elemid + '" target="_blank" rel="$1">$2</a>');
+  
+  return elem.innerHTML;
+}
+
+function CreateHearthheadCard(result, elemid) {
+  var elem = document.getElementById(elemid);
+  var tempDiv = document.createElement('div');
+  tempDiv.innerHTML = result;
+
+  var title = tempDiv.querySelector("title");
+  var members = tempDiv.querySelectorAll(".deckguide-cards-type .heading-size-3, .deckguide-cards-type ul li");
+
+  var deckstr = "<div class='inline-wrap'><div class='inline-preview hs'></div></div>" + 
+    "<div class='inline-icon hs'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
+    elem.firstChild.innerHTML + "'>" + title.textContent + "</a>\n<span>via <a href='http://www.hearthhead.com'>Hearthhead.com</a></span></div><div class='cardlist'><ul>";
+  for(j = 0; j < members.length; j++) {
+    if (members[j].nodeName == "H2") {
+      deckstr = deckstr + "<li class='separator'>" + members[j].innerHTML.trim() + "</li>";
+    } else {
+      var name = members[j].querySelector(".card").textContent.trim();
+      members[j].removeChild(members[j].firstChild);
+      var qty = members[j].textContent.trim().replace('x','');
+      if (qty == "") {
+        qty = 1;
+      }
+      deckstr = deckstr + "<li>" + (qty + "x [hs::" + name + "]</li>");
     }
   }
   deckstr += "</ul></div>";
@@ -298,7 +166,7 @@ function CreateTempostormCard(result, elemid) {
   for(j = 0; j < members.length; j++) {
     var name = members[j].innerHTML.trim();
     var qty = qtys[j].innerHTML.trim();
-    deckstr = deckstr + "<li>" + (qty + "x [mtg::" + name + "]\n</li>");
+    deckstr = deckstr + "<li>" + (qty + "x [mtg::" + name + "]</li>");
   }
   deckstr += "</ul></div>";
   elem.innerHTML = deckstr;
@@ -328,7 +196,7 @@ function CreateChannelFireballCard(result, elemid) {
     } else {
       var name = members[j].getAttribute('data-name');
       var qty = members[j].querySelector(".qty").innerHTML;
-      deckstr = deckstr + "<li>" + (qty + "x [mtg::" + name + "]\n</li>");
+      deckstr = deckstr + "<li>" + (qty + "x [mtg::" + name + "]</li>");
     }
   }
   deckstr += "</ul></div>";
@@ -358,7 +226,7 @@ function CreateTappedoutCard(result, elemid) {
         name = name.replace("/mtg-card/",'');
         name = name.replace("/",'');
         name = name.split("-").join(' ');
-        deckstr = deckstr + "<li>[mtg::" + name + "]\n</li>";
+        deckstr = deckstr + "<li>[mtg::" + name + "]</li>";
       } else {
         var name = members[j].getAttribute('data-name');
         var qty = members[j].getAttribute('data-quantity');
@@ -388,7 +256,7 @@ function CreateMtggoldfishCard(result, elemid) {
   for(j = 0; j < members.length; j++) {
     var name = members[j].innerHTML.trim();
     var qty = qtys[j].innerHTML.trim();
-    deckstr = deckstr + "<li>" + (qty + "x [mtg::" + name + "]\n</li>");
+    deckstr = deckstr + "<li>" + (qty + "x [mtg::" + name + "]</li>");
   }
   deckstr += "</ul></div>";
   elem.innerHTML = deckstr;
@@ -431,6 +299,7 @@ function CallbackMTG() {
     elem = elems[i]
     var stickerPattern = /^\[[^\[\]]+::[^\[\]]+\]$/i
     if (stickerPattern.test(elem.innerHTML)) {
+      /*
       var split = elem.innerHTML.substring(1,elem.innerHTML.length-1).split("::");
       var safeclass = SafeCSSClass(split[1], split[0]);
       if(split[0] == "mtg") {
@@ -448,11 +317,13 @@ function CallbackMTG() {
         }
       }
       elem.parentNode.style.cssText = 'padding: 0; background-color:transparent !important';
+      */
     } else {
       if (elem.innerHTML.indexOf('</a>') == -1) {
         elem.innerHTML = elem.innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, '<a class="tooltip" target="_blank" rel="$1">$2</a>');
       }
       // Detect HTML match string and set appropriate data-type
+      /*
       if (!elem.hasAttribute("data-type") && elem.innerHTML.indexOf('</a>') > 0) {
         if (elem.innerHTML.indexOf('tappedout.net') > 0) {
           elem.setAttribute("data-type","tappedout");
@@ -484,15 +355,20 @@ function CallbackMTG() {
           elem.parentNode.parentNode.className += " hidecard";
           ParseURL(elem.firstChild.innerHTML, elem.id, "hearthpwn");
         }
-        /*
+        if (elem.innerHTML.indexOf('hearthhead.com/deck') > 0) {
+          elem.setAttribute("data-type","hearthhead");
+          elem.id = RandomGUID();
+          elem.parentNode.parentNode.className += " hidecard";
+          ParseURL(elem.firstChild.innerHTML, elem.id, "hearthhead");
+        }
         if (elem.innerHTML.indexOf('tempostorm.com/hearthstone/decks') > 0) {
           elem.setAttribute("data-type","tempostorm");
           elem.id = RandomGUID();
           elem.parentNode.parentNode.className += " hidecard";
           ParseURL(elem.firstChild.innerHTML, elem.id, "tempostorm");
         }
-        */
       }
+      */
     }
   }
 
