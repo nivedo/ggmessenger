@@ -37,14 +37,35 @@ Notification.requestPermission = NativeNotification.requestPermission.bind(Notif
 /* eslint-enable no-native-reassign, no-undef */
 
 // TODO: Remove this hacky non-CORS stuff
+/*
 const webFrame = require('electron').webFrame;
 webFrame.registerURLSchemeAsBypassingCSP("https");
 webFrame.registerURLSchemeAsBypassingCSP("http");
+*/
 
+function DisplayReady() {
+	var blocks = document.querySelectorAll('._1t_p');
+	for(var i = 0; i < blocks.length; i++) {
+		var block = blocks[i];
+		var elems = block.querySelectorAll('._hh7 > span._3oh-');
+		var ready = true;
+		for(var j = 0; j < elems.length; j++) {
+			if (!elems[j].hasAttribute('data-ready')) {
+				ready = false;
+				break;
+			}
+		}
+		if (ready) {
+			block.className += " show";
+		}
+	}
+}
+
+// TODO: move this to tooltips.js and refactor
 function ProcessTooltips() {
   var tooltips = document.querySelectorAll('._nd_ .tooltip')
-  for (i = 0; i < tooltips.length; ++i) {
-    if (!hasClass(tooltips[i], "right")) {
+  for (var i = 0; i < tooltips.length; ++i) {
+    if (!utils.HasClass(tooltips[i], "right")) {
       tooltips[i].className += " right"
     }
   }
@@ -52,7 +73,7 @@ function ProcessTooltips() {
   var tooltips = document.querySelectorAll('.tooltip[data-preview]')
   for (i = 0; i < tooltips.length; ++i) {
     var safeclass = utils.SafeCSSClass(tooltips[i].textContent, tooltips[i].rel);
-    if (!hasClass(tooltips[i], safeclass)) {
+    if (!utils.HasClass(tooltips[i], safeclass)) {
       tooltips[i].className += (" " + safeclass)
       if (tooltips[i].rel == "mtg") {
         tooltips[i].href = "http://gatherer.wizards.com/Pages/Card/Details.aspx?name=" + encodeURIComponent(tooltips[i].textContent);
@@ -60,7 +81,7 @@ function ProcessTooltips() {
       if (tooltips[i].rel == "hs") {
         tooltips[i].href = "http://www.hearthpwn.com/cards?filter-name=" + encodeURIComponent(tooltips[i].textContent);
       }
-      if(hasClass(tooltips[i], "noshow")) {
+      if(utils.HasClass(tooltips[i], "noshow")) {
         tooltips[i].onmouseover = function() {
           var elem = this.closest('span._3oh-');
           var inpreview = elem.querySelector(".inline-preview");
@@ -86,20 +107,17 @@ function ProcessTooltips() {
   }
 }
 
-
 function RefreshAll() {
 	var elems = document.querySelectorAll('._hh7 > span._3oh-'), i, elem;
 	var count = 0;
 	var messages = [];
 	// HACK: prevent refreshing when URLs need to be replaced
-	/*
 	for (i = 0; i < elems.length; ++i) {
 		elem = elems[i];
 		if(elem.innerHTML.trim().substring(0,4) == "http") {
 			return;			
 		}
 	}
-	*/
 	for (i = 0; i < elems.length; ++i) {
 		elem = elems[i];
 		if(!elem.hasAttribute("data-gg")) {
@@ -163,16 +181,32 @@ ipc.on('message-callback', (evt,results) => {
 		var type = result[1];
 		var replaceContent = result[2];
 		var elem = document.getElementById(elemid);
-		elem.innerHTML = replaceContent;
 
+		if (elem == null) {
+			continue;
+		}
+		elem.setAttribute("data-ready", true);
 		if (type == 'sticker') {
 			elem.parentNode.style.cssText = 'padding: 0; background-color:transparent !important';
 		}
 		if (type == "urlsummary") {
 			elem.parentNode.parentNode.className += " hidecard";
+			var refNode = elem.closest("._o46._3erg");
+			var clone = refNode.cloneNode(true);
+			var cloneElems = clone.querySelectorAll("._hh7 > span._3oh-");
+			for(var j = 0; j < cloneElems.length; j++) {
+				cloneElems[j].id += "-clone";
+			}
+			console.log(clone);
+			refNode.parentNode.insertBefore(clone, refNode);
+			elem.parentNode.style.cssText = 'border: 1px solid #ddd; background-color:transparent !important';
+		}
+		if (replaceContent != null) {
+			elem.innerHTML = replaceContent;
 		}
 	}
 	ProcessTooltips();
+	DisplayReady();
 });
 
 ipc.on('scroll-to', (evt, args) => {

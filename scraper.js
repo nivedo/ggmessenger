@@ -68,7 +68,33 @@ function _parseMTGSalvation(url, $) {
 }
 
 function _parseChannelFireball(url, $) {
-	return "";
+	var title = $("title").text();
+	var decklist = $(".crystal-catalog-helper.crystal-catalog-helper-list");
+	var deckname = decklist.prevUntil('h1').text();
+	if (deckname == undefined) deckname = title;
+	var members = decklist.first().find("a.crystal-catalog-helper-list-item, span.crystal-catalog-helper-subtitle");
+
+	var deckstr = "<div class='inline-wrap'><div class='inline-preview mtg'></div></div>" + 
+    	"<div class='inline-icon mtg'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
+    	url + "'>" + title + "</a>\n<span>via <a href='http://www.channelfireball.com'>ChannelFireball.com</a></span></div><div class='cardlist'><ul>";
+
+    members.each(function(index) {
+    	if($(this).is("span")) {
+    		deckstr = deckstr + "<li class='separator'>" + $(this).text().trim() + "</li>";
+    	} else {
+    		var qty = $(this).find(".qty").text().trim();
+	    	var name = $(this).attr('data-name');
+    		var safeclass = utils.SafeCSSClass(name, 'mtg');
+		    deckstr = deckstr + "<li>" + (qty + "x <a class='tooltip noshow' target='_blank' data-preview=\"" + 
+		    	library.getstyle(safeclass) + "\" href=\"" + 
+	    		"http://gatherer.wizards.com/Pages/Card/Details.aspx?name=" + encodeURIComponent(name) + 
+	    	 	"\">" + name + "</a></li>");
+	    }
+    });
+
+    deckstr += "</ul></div>";
+
+    return deckstr;
 }
 
 function _parseHearthpwn(url, $) {

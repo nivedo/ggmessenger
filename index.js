@@ -86,11 +86,6 @@ app.on('ready', () => {
 
 	page.on('dom-ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
-		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'trie.js'), 'utf8'));
-		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'preload.js'), 'utf8'));
-		page.executeJavaScript("loadPluginFromJSON('https://d1fyt5lxvxva06.cloudfront.net/config/mtg_en_v4.json','height:328px;width:230px;','mtg');");
-		page.executeJavaScript("loadPluginFromJSON('https://d1fyt5lxvxva06.cloudfront.net/config/hearthstone_en.json','height:348px;width:230px;','hs');");
-		page.executeJavaScript(fs.readFileSync(path.join(__dirname, 'observe.js'), 'utf8'));
 		mainWindow.show();
 	});
 
@@ -100,7 +95,6 @@ app.on('ready', () => {
 	});
 
 	page.on('did-frame-finish-load', (e, url) => {
-		page.executeJavaScript('CallbackMTG();');
 		page.send('create-keyboard',['mtg']);
 		page.send('refresh-all');
 		page.send('observe-dom');
@@ -127,18 +121,6 @@ ipc.on('notification-click', () => {
 
 ipc.on('handle-messages', (evt, messages) => {
 	handler.parse(messages);
-	/*
-	var results = [];
-	for(var i = 0; i < messages.length; i++) {
-		var result = handler.parse(messages[i]);
-		if (result != null) {
-			results.push(result);
-		}
-	}
-	mainWindow.send("message-callback", results);
-	var lastid = messages[messages.length-1][0];
-	mainWindow.send("scroll-to", [lastid]);
-	*/
 });
 
 ipc.on('autocomplete', (evt, args) => {

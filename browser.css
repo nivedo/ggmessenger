@@ -40,6 +40,14 @@ time._3oh- {
 }
 */
 
+._1t_p {
+  display: none;
+}
+
+._1t_p.show {
+  display: block;
+}
+
 /* THEME 2 */
 ._1enh, ._1ht1, ._5t4c, ._5l37 {
   background-color: #224760 !important;

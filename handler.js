@@ -28,6 +28,17 @@ function handleURL(raw) {
 	return null;
 }
 
+function handleTooltips(raw) {
+	if(raw.indexOf('</a>') == -1) {
+		return raw.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, function(match, $1, $2) {
+			var safeclass = utils.SafeCSSClass($2, $1);
+			var style = library.getstyle(safeclass);
+			return '<a class="tooltip" target="_blank" rel="' + $1 + '" data-preview="' + style + '">' + $2 + '</a>';
+		});
+	}
+	return null;
+}
+
 function parseWithPromises(messages) {
 	var promises = [];
 	var results = [];
@@ -48,8 +59,21 @@ function parseWithPromises(messages) {
 		var url = handleURL(raw);
 		if (url != null) {
 			var promise = scraper.parse(elemid, url);
-			if (promise != null) promises.push(promise);
+			if (promise != null) {
+				promises.push(promise);
+				continue;
+			}
 		}
+
+		// Type 3: Inline tooltips
+		var tooltips = handleTooltips(raw);
+		if (tooltips != null) {
+			results.push([elemid, 'tooltips', tooltips]);
+			continue;
+		}
+
+		// Do nothing
+		results.push([elemid, 'default', null]);
 	}
 
 	Promise.all(promises).then(function(values) {

@@ -32,3 +32,7 @@ exports.RandomGUID = () => {
   };
   return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 }
+
+exports.HasClass = (element, cls) => {
+  return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+}
