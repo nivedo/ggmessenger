@@ -34,11 +34,15 @@
     "chat",
     "instant",
     "messaging",
-    "caprine"
+    "ggchat",
+    "ggmessenger"
   ],
   "dependencies": {
     "electron-debug": "^0.5.0",
-    "electron-dl": "^0.2.0"
+    "electron-dl": "^0.2.0",
+    "cheerio": "^0.20.0",
+    "request": "^2.69.0",
+    "triejs": "^0.1.5"
   },
   "devDependencies": {
     "electron-packager": "^5.2.0",
