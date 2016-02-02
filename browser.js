@@ -197,7 +197,6 @@ ipc.on('message-callback', (evt,results) => {
 			for(var j = 0; j < cloneElems.length; j++) {
 				cloneElems[j].id += "-clone";
 			}
-			console.log(clone);
 			refNode.parentNode.insertBefore(clone, refNode);
 			elem.parentNode.style.cssText = 'border: 1px solid #ddd; background-color:transparent !important';
 		}

@@ -1,6 +1,5 @@
 'use strict';
 const utils = require('./utils')
-const library = require('./library')
 const ipc = require('electron').ipcRenderer;
 
 function CreateKeyboard(default_type) {
@@ -62,9 +61,10 @@ function SetAutocomplete(results, partial) {
       var li = document.createElement("li");
       var link = document.createElement("a");
       link.textContent = results[i]["name"];
+      link.setAttribute("style-preview", results[i]["css"]);
       link.onmouseover = function() {
         preview.className = "preview-region sticker " + utils.SafeCSSClass(this.textContent, keytype);
-        preview.style.cssText = stylemap[utils.SafeCSSClass(this.textContent, keytype)];
+        preview.style.cssText = this.getAttribute("style-preview");
       };
       link.onmouseout = function() {
         preview.className = "preview-region";
@@ -121,7 +121,6 @@ function SetKeyboardEvents() {
     var keytype = document.querySelector(".icon").alt;
 
     if (content.length > 0) {
-      console.log(content);
       ipc.send('autocomplete', [keytype, content]);
     }
   };
@@ -130,7 +129,6 @@ function SetKeyboardEvents() {
 /* IPC callback */
 
 ipc.on('autocomplete', (evt, results) => {
-  console.log(results);
   var autoarea = document.querySelector(".auto-region");
   var preview = document.querySelector(".preview-region");
 

@@ -38,6 +38,10 @@ function loadHelper(lib, extracss, type) {
 		var ext = lib[i]["ext"];
 		var sublib = lib[i]["assets"];
 		for( var j = 0; j < sublib.length; j++) {
+			var imgsrc = "https://d1fyt5lxvxva06.cloudfront.net/" + bundleId + 
+				"/" +  sublib[j]["id"] + "." + ext;
+			var cssstr = extracss + 
+				"background-image:url('" + imgsrc + "') !important;";
 			// Hacky "async" optimization to not lock UI
 	        if (count % 100 == 0) {
 	          	jsfull += "setTimeout(function() {";
@@ -55,7 +59,7 @@ function loadHelper(lib, extracss, type) {
 		        		utils.TrieString(nextword) + 
 		        		'", {name: "' + 
 		        		name.replace(/"/g, '\\"') + 
-		        		'", type: "' + type + '"});';
+		        		'", type: "' + type + '", css: "' + cssstr + '"});';
 					jsfull += jsline;
 		        }
 		        lastword = nextword;
@@ -64,9 +68,7 @@ function loadHelper(lib, extracss, type) {
 		        jsfull += "}, " + (count - count % 100) / 2 + ");"
 		        closed = true;
 		    }
-			styleMap[utils.SafeCSSClass(name, type)] = extracss + 
-				"background-image:url('https://d1fyt5lxvxva06.cloudfront.net/" + bundleId + 
-				"/" +  sublib[j]["id"] + "." + ext + "') !important;";
+			styleMap[utils.SafeCSSClass(name, type)] = cssstr;
 			count++;
 		}
 	}

@@ -31,7 +31,38 @@ function getParser(url) {
 /* Scrapers */
 
 function _parseTappedout(url, $) {
-	return "";
+	var title = $("title").text();
+	var members = $(".boardlist .member .qty.board, .board-col h3, .board-col a[href*='mtg-card']:not([rel])");
+
+	var deckstr = "<div class='inline-wrap'><div class='inline-preview mtg'></div></div>" + 
+    	"<div class='inline-icon mtg'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
+    	url + "'>" + title + "</a>\n<span>via <a href='http://www.tappedout.net'>Tappedout.net</a></span></div><div class='cardlist'><ul>";
+
+    members.each(function(index) {
+    	if($(this).is("h3")) {
+    		deckstr = deckstr + "<li class='separator'>" + $(this).text().trim() + "</li>";
+    	} else {
+    		var qty = 1, name;
+    		if($(this).attr("href") != "#") {
+    			name = $(this).attr("href");
+    			name = name.replace("/mtg-card/",'');
+		        name = name.replace("/",'');
+		        name = name.split("-").join(' ');
+    		} else {
+    			name = $(this).attr("data-name");
+    			qty = $(this).attr("data-quantity");
+    		}
+    		var safeclass = utils.SafeCSSClass(name, 'mtg');
+	    	deckstr = deckstr + "<li>" + (qty + "x <a class='tooltip noshow' target='_blank' data-preview=\"" + 
+		    	library.getstyle(safeclass) + "\" href=\"" + 
+	    		"http://gatherer.wizards.com/Pages/Card/Details.aspx?name=" + encodeURIComponent(name) + 
+	    	 	"\">" + name + "</a></li>");
+	    }
+    });
+
+    deckstr += "</ul></div>";
+
+    return deckstr;
 }
 
 function _parseMTGGoldfish(url, $) {
@@ -64,7 +95,27 @@ function _parseMTGGoldfish(url, $) {
 }
 
 function _parseMTGSalvation(url, $) {
-	return "";
+	var deckwrap = $(".forum-deck-wrapper .deck");
+	var deckinfo = JSON.parse(deckwrap.attr("data-card-list"));
+	var members = deckinfo["Deck"];
+	var title = $("header.caption-threads h2").text();
+
+	var deckstr = "<div class='inline-wrap'><div class='inline-preview mtg'></div></div>" + 
+    	"<div class='inline-icon mtg'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
+    	url + "'>" + title + "</a>\n<span>via <a href='http://www.mtgsalvation.com'>MTGSalvation.com</a></span></div><div class='cardlist'><ul>";
+
+	for(var j = 0; j < members.length; j++) {
+	    var name = members[j]["CardName"];
+	    var qty = members[j]["Qty"];
+	    var safeclass = utils.SafeCSSClass(name, 'mtg');
+	    deckstr = deckstr + "<li>" + (qty + "x <a class='tooltip noshow' target='_blank' data-preview=\"" + 
+	    	library.getstyle(safeclass) + "\" href=\"" + 
+    		"http://gatherer.wizards.com/Pages/Card/Details.aspx?name=" + encodeURIComponent(name) + 
+    	 	"\">" + name + "</a></li>");
+	}
+
+	deckstr += "</ul></div>";
+    return deckstr;
 }
 
 function _parseChannelFireball(url, $) {
