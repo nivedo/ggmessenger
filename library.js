@@ -82,6 +82,8 @@ function autoComplete(keytype, content) {
 	var results = [];
 	var partial = '';
 
+	if (content.length == 0) return results;
+
 	if (content.length > 0 && content.charAt(0) == "@") {
       var searchstr = utils.TrieString(content.substring(1));
       var fullres = trieMap[keytype].find(searchstr);

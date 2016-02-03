@@ -1,5 +1,13 @@
 'use strict';
 
+var _CARDURL = {};
+_CARDURL["mtg"] = "http://magiccards.info/query?q=!";
+_CARDURL["hs"] = "http://www.hearthpwn.com/cards?filter-name=";
+
+exports.GetCardURL = (name, type) => {
+  return _CARDURL[type] + encodeURIComponent(name.replace(/[\u2018\u2019]/g, "'"));
+}
+
 exports.SafeCSSClass = (name, type) => {
   var namestr = exports.NormString(type) + "_" + exports.NormString(name);
   return namestr;

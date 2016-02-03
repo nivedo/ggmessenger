@@ -36,15 +36,9 @@ Notification.permission = NativeNotification.permission;
 Notification.requestPermission = NativeNotification.requestPermission.bind(Notification);
 /* eslint-enable no-native-reassign, no-undef */
 
-// TODO: Remove this hacky non-CORS stuff
-/*
-const webFrame = require('electron').webFrame;
-webFrame.registerURLSchemeAsBypassingCSP("https");
-webFrame.registerURLSchemeAsBypassingCSP("http");
-*/
-
 function DisplayReady() {
 	var blocks = document.querySelectorAll('._1t_p');
+	var allready = true;
 	for(var i = 0; i < blocks.length; i++) {
 		var block = blocks[i];
 		var elems = block.querySelectorAll('._hh7 > span._3oh-');
@@ -52,6 +46,7 @@ function DisplayReady() {
 		for(var j = 0; j < elems.length; j++) {
 			if (!elems[j].hasAttribute('data-ready')) {
 				ready = false;
+				allready = false;
 				break;
 			}
 		}
@@ -59,6 +54,30 @@ function DisplayReady() {
 			block.className += " show";
 		}
 	}
+	if (allready) {
+		var times = document.querySelectorAll('._497p._2lpt');
+		for(var i = 0; i < times.length; i++) {
+			if(times[i].className.indexOf("show") == -1) {
+				times[i].className += " show";
+			}
+		}
+	}
+}
+
+function DisplayReadyV2() {
+	var js1 = document.getElementById("js_1");
+	if(js1.className.indexOf("show") > 0) return;
+
+	var elems = document.querySelectorAll('._hh7 > span._3oh-');
+	for(var j = 0; j < elems.length; j++) {
+		if (!elems[j].hasAttribute('data-ready')) {
+			return;
+		}
+	}
+	
+	// All ready
+	ScrollToBottom();
+	js1.className += " show";
 }
 
 // TODO: move this to tooltips.js and refactor
@@ -75,12 +94,6 @@ function ProcessTooltips() {
     var safeclass = utils.SafeCSSClass(tooltips[i].textContent, tooltips[i].rel);
     if (!utils.HasClass(tooltips[i], safeclass)) {
       tooltips[i].className += (" " + safeclass)
-      if (tooltips[i].rel == "mtg") {
-        tooltips[i].href = "http://gatherer.wizards.com/Pages/Card/Details.aspx?name=" + encodeURIComponent(tooltips[i].textContent);
-      }
-      if (tooltips[i].rel == "hs") {
-        tooltips[i].href = "http://www.hearthpwn.com/cards?filter-name=" + encodeURIComponent(tooltips[i].textContent);
-      }
       if(utils.HasClass(tooltips[i], "noshow")) {
         tooltips[i].onmouseover = function() {
           var elem = this.closest('span._3oh-');
@@ -112,12 +125,14 @@ function RefreshAll() {
 	var count = 0;
 	var messages = [];
 	// HACK: prevent refreshing when URLs need to be replaced
+	
 	for (i = 0; i < elems.length; ++i) {
 		elem = elems[i];
 		if(elem.innerHTML.trim().substring(0,4) == "http") {
 			return;			
 		}
 	}
+	
 	for (i = 0; i < elems.length; ++i) {
 		elem = elems[i];
 		if(!elem.hasAttribute("data-gg")) {
@@ -128,9 +143,7 @@ function RefreshAll() {
 			count++;
 		}
 	}
-	if (messages.length > 0) {
-		ipc.send('handle-messages',messages);
-	}
+	ipc.send('handle-messages',messages);
 }
 
 function ScrollTo(elemid) {
@@ -138,6 +151,11 @@ function ScrollTo(elemid) {
 	var rect = elem.getBoundingClientRect();
 	var s = document.querySelector("._4_j4 .scrollable");
 	elem.scrollIntoView();
+}
+
+function ScrollToBottom() {
+	var s = document.querySelector("._4_j4 .scrollable");
+	s.scrollTop = s.scrollHeight;
 }
 
 // Mutation Observer to detect DOM Changes
@@ -204,8 +222,13 @@ ipc.on('message-callback', (evt,results) => {
 			elem.innerHTML = replaceContent;
 		}
 	}
-	ProcessTooltips();
-	DisplayReady();
+	if(results.length > 0) {
+		ProcessTooltips();
+	}
+});
+
+ipc.on('check-ready', () => {
+	DisplayReadyV2();
 });
 
 ipc.on('scroll-to', (evt, args) => {

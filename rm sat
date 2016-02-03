@@ -1,0 +1,285 @@
+warning: CRLF will be replaced by LF in keyboard.js.
+The file will have its original line endings in your working directory.
+[1mdiff --git a/browser.css b/browser.css[m
+[1mindex 6e891c8..095590f 100644[m
+[1m--- a/browser.css[m
+[1m+++ b/browser.css[m
+[36m@@ -49,7 +49,7 @@[m [mtime._3oh- {[m
+ }[m
+ [m
+ /* THEME 2 */[m
+[31m-._1enh, ._1ht1, ._5t4c, ._5l37 {[m
+[32m+[m[32m._1enh, ._1ht1, ._5t4c, ._1enh ._5l37 {[m
+   background-color: #224760 !important;[m
+ }[m
+ ._36ic, ._225b, ._5iwm ._58al {[m
+[36m@@ -74,7 +74,7 @@[m [mtime._3oh- {[m
+ ._1htf, ._1ht7, ._225b, ._5iwm ._58al {[m
+   color: rgba(255,255,255,0.5) !important;[m
+ }[m
+[31m-._1ht6, ._364g, ._5l37 {[m
+[32m+[m[32m._1ht6, ._1enh ._364g, ._1enh ._5l37 {[m
+   color: rgba(255,255,255,0.9)  !important;[m
+ }[m
+ ._1ht6, ._llq ._3oh-, ._3eur ._3oh-, ._17w2 ._3oh-, ._364g {[m
+[1mdiff --git a/browser.js b/browser.js[m
+[1mindex 4d6e222..dfaf86b 100644[m
+[1m--- a/browser.js[m
+[1m+++ b/browser.js[m
+[36m@@ -197,7 +197,6 @@[m [mipc.on('message-callback', (evt,results) => {[m
+ 			for(var j = 0; j < cloneElems.length; j++) {[m
+ 				cloneElems[j].id += "-clone";[m
+ 			}[m
+[31m-			console.log(clone);[m
+ 			refNode.parentNode.insertBefore(clone, refNode);[m
+ 			elem.parentNode.style.cssText = 'border: 1px solid #ddd; background-color:transparent !important';[m
+ 		}[m
+[1mdiff --git a/keyboard.js b/keyboard.js[m
+[1mindex c3d2a41..3eb8d94 100644[m
+[1m--- a/keyboard.js[m
+[1m+++ b/keyboard.js[m
+[36m@@ -1,6 +1,5 @@[m
+ 'use strict';[m
+ const utils = require('./utils')[m
+[31m-const library = require('./library')[m
+ const ipc = require('electron').ipcRenderer;[m
+ [m
+ function CreateKeyboard(default_type) {[m
+[36m@@ -62,9 +61,10 @@[m [mfunction SetAutocomplete(results, partial) {[m
+       var li = document.createElement("li");[m
+       var link = document.createElement("a");[m
+       link.textContent = results[i]["name"];[m
+[32m+[m[32m      link.setAttribute("style-preview", results[i]["css"]);[m
+       link.onmouseover = function() {[m
+         preview.className = "preview-region sticker " + utils.SafeCSSClass(this.textContent, keytype);[m
+[31m-        preview.style.cssText = stylemap[utils.SafeCSSClass(this.textContent, keytype)];[m
+[32m+[m[32m        preview.style.cssText = this.getAttribute("style-preview");[m
+       };[m
+       link.onmouseout = function() {[m
+         preview.className = "preview-region";[m
+[36m@@ -121,7 +121,6 @@[m [mfunction SetKeyboardEvents() {[m
+     var keytype = document.querySelector(".icon").alt;[m
+ [m
+     if (content.length > 0) {[m
+[31m-      console.log(content);[m
+       ipc.send('autocomplete', [keytype, content]);[m
+     }[m
+   };[m
+[36m@@ -130,7 +129,6 @@[m [mfunction SetKeyboardEvents() {[m
+ /* IPC callback */[m
+ [m
+ ipc.on('autocomplete', (evt, results) => {[m
+[31m-  console.log(results);[m
+   var autoarea = document.querySelector(".auto-region");[m
+   var preview = document.querySelector(".preview-region");[m
+ [m
+[1mdiff --git a/library.js b/library.js[m
+[1mindex a02789f..60be918 100644[m
+[1m--- a/library.js[m
+[1m+++ b/library.js[m
+[36m@@ -38,6 +38,10 @@[m [mfunction loadHelper(lib, extracss, type) {[m
+ 		var ext = lib[i]["ext"];[m
+ 		var sublib = lib[i]["assets"];[m
+ 		for( var j = 0; j < sublib.length; j++) {[m
+[32m+[m			[32mvar imgsrc = "https://d1fyt5lxvxva06.cloudfront.net/" + bundleId +[m[41m [m
+[32m+[m				[32m"/" +  sublib[j]["id"] + "." + ext;[m
+[32m+[m			[32mvar cssstr = extracss +[m[41m [m
+[32m+[m				[32m"background-image:url('" + imgsrc + "') !important;";[m
+ 			// Hacky "async" optimization to not lock UI[m
+ 	        if (count % 100 == 0) {[m
+ 	          	jsfull += "setTimeout(function() {";[m
+[36m@@ -55,7 +59,7 @@[m [mfunction loadHelper(lib, extracss, type) {[m
+ 		        		utils.TrieString(nextword) + [m
+ 		        		'", {name: "' + [m
+ 		        		name.replace(/"/g, '\\"') + [m
+[31m-		        		'", type: "' + type + '"});';[m
+[32m+[m		[41m        [m		[32m'", type: "' + type + '", css: "' + cssstr + '"});';[m
+ 					jsfull += jsline;[m
+ 		        }[m
+ 		        lastword = nextword;[m
+[36m@@ -64,9 +68,7 @@[m [mfunction loadHelper(lib, extracss, type) {[m
+ 		        jsfull += "}, " + (count - count % 100) / 2 + ");"[m
+ 		        closed = true;[m
+ 		    }[m
+[31m-			styleMap[utils.SafeCSSClass(name, type)] = extracss + [m
+[31m-				"background-image:url('https://d1fyt5lxvxva06.cloudfront.net/" + bundleId + [m
+[31m-				"/" +  sublib[j]["id"] + "." + ext + "') !important;";[m
+[32m+[m			[32mstyleMap[utils.SafeCSSClass(name, type)] = cssstr;[m
+ 			count++;[m
+ 		}[m
+ 	}[m
+[1mdiff --git a/observe.js b/observe.js[m
+[1mdeleted file mode 100644[m
+[1mindex 35e958b..0000000[m
+[1m--- a/observe.js[m
+[1m+++ /dev/null[m
+[36m@@ -1,27 +0,0 @@[m
+[31m-// Mutation Observer to detect DOM Changes[m
+[31m-var observeDOM = (function(){[m
+[31m-  var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,[m
+[31m-    eventListenerSupported = window.addEventListener;[m
+[31m-[m
+[31m-  return function(obj, callback){[m
+[31m-    if( MutationObserver ){[m
+[31m-      // define a new observer[m
+[31m-      var obs = new MutationObserver(function(mutations, observer){[m
+[31m-        if( mutations[0].addedNodes.length || mutations[0].removedNodes.length)[m
+[31m-          if( mutations[0].target.nodeName != "SPAN" )[m
+[31m-            callback();[m
+[31m-      });[m
+[31m-      // have the observer observe foo for changes in children[m
+[31m-      obs.observe( obj, { childList:true, subtree:true });[m
+[31m-    }[m
+[31m-    else if( eventListenerSupported ){[m
+[31m-      obj.addEventListener('DOMNodeInserted', callback, false);[m
+[31m-      obj.addEventListener('DOMNodeRemoved', callback, false);[m
+[31m-    }[m
+[31m-  }[m
+[31m-})();[m
+[31m-[m
+[31m-// Observe a specific DOM element:[m
+[31m-observeDOM( document.querySelector('._1q5-') ,function(){[m
+[31m-  CallbackMTG()[m
+[31m-});[m
+[1mdiff --git a/preload.js b/preload.js[m
+[1mdeleted file mode 100644[m
+[1mindex b8dfa22..0000000[m
+[1m--- a/preload.js[m
+[1m+++ /dev/null[m
+[36m@@ -1,494 +0,0 @@[m
+[31m-function SafeCSSClass(name, type) {[m
+[31m-  namestr = NormString(type) + "_" + NormString(name);[m
+[31m-  return namestr;[m
+[31m-}[m
+[31m-[m
+[31m-function NormString(str) {[m
+[31m-  return str.trim().replace(/[^a-z0-9]/g, function(s) {[m
+[31m-    var c = s.charCodeAt(0);[m
+[31m-    if (c == 198) return "ae";[m
+[31m-    if (c == 91 || c == 93) return ''; // remove [] brackets[m
+[31m-    if (c >= 65 && c <= 90) return s.toLowerCase(); // convert upper to lowercase[m
+[31m-    return '-' // everything else becomes dash[m
+[31m-  });[m
+[31m-}[m
+[31m-[m
+[31m-function TrieString(name) {[m
+[31m-  return name.trim().replace(/[^a-z0-9]/g, function(s) {[m
+[31m-    var c = s.charCodeAt(0);[m
+[31m-    if (c == 32) return '_';[m
+[31m-    if (c == 198) return "ae";[m
+[31m-    if (c == 91 || c == 93) return ''; // remove [] brackets[m
+[31m-    if (c >= 65 && c <= 90) return s.toLowerCase(); // convert upper to lowercase[m
+[31m-    return '' // everything else becomes dash[m
+[31m-  });[m
+[31m-}[m
+[31m-[m
+[31m-function RandomGUID() {[m
+[31m-  var S4 = function() {[m
+[31m-    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);[m
+[31m-  };[m
+[31m-  return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());[m
+[31m-}[m
+[31m-[m
+[31m-function ScrollDown() {[m
+[31m-  /*[m
+[31m-  var s = document.querySelector("._4_j4 .scrollable");[m
+[31m-  s.scrollTop = s.scrollHeight;[m
+[31m-  */[m
+[31m-}[m
+[31m-[m
+[31m-/* URL Parsing */[m
+[31m-[m
+[31m-var urlcount = 0;[m
+[31m-[m
+[31m-function ParseURL(url, elemid, type) {[m
+[31m-  if (url in cachemap) {[m
+[31m-    //CreateCardFromCache(url, elemid);[m
+[31m-    setTimeout(function(a,b) { CreateCardFromCache(a,b); }, 0, url, elemid);[m
+[31m-    return;[m
+[31m-  }[m
+[31m-  var xhr = new XMLHttpRequest();[m
+[31m-  xhr.open("GET", url, true);[m
+[31m-  xhr.onload = function (e) {[m
+[31m-    urlcount--;[m
+[31m-    if(this.status == 200 || this.status == 304) {[m
+[31m-      var cleanresp = this.responseText.replace(/<script(.|\s)*?\/script>/g, '');[m
+[31m-      cleanresp = cleanresp.replace(/<img(.|\s)*?>/g, '');[m
+[31m-      if(type == "tappedout") {[m
+[31m-        cachemap[url] = CreateTappedoutCard(cleanresp, elemid);[m
+[31m-      }[m
+[31m-      if(type == "mtggoldfish") {[m
+[31m-        cachemap[url] = CreateMtggoldfishCard(cleanresp, elemid);[m
+[31m-      }[m
+[31m-      if(type == "mtgsalvation") {[m
+[31m-        cachemap[url] = CreateMTGSalvationCard(cleanresp, elemid);[m
+[31m-      }[m
+[31m-      if(type == "channelfireball") {[m
+[31m-        cachemap[url] = CreateChannelFireballCard(cleanresp, elemid);[m
+[31m-      }[m
+[31m-      if(type == "hearthpwn") {[m
+[31m-        cachemap[url] = CreateHearthpwnCard(cleanresp, elemid);[m
+[31m-      }[m
+[31m-      if(type == "hearthhead") {[m
+[31m-        cachemap[url] = CreateHearthheadCard(cleanresp, elemid);[m
+[31m-      }[m
+[31m-      if(type == "tempostorm") {[m
+[31m-        cachemap[url] = CreateTempostormCard(cleanresp, elemid);[m
+[31m-      }[m
+[31m-      FixTooltips();[m
+[31m-      ScrollDown();[m
+[31m-    }[m
+[31m-  };[m
+[31m-  urlcount++;[m
+[31m-  xhr.send(null);[m
+[31m-}[m
+[31m-[m
+[31m-function CreateCardFromCache(url, elemid) {[m
+[31m-  var elem = document.getElementById(elemid);[m
+[31m-  elem.innerHTML = cachemap[url];[m
+[31m-  FixTooltips();[m
+[31m-  ScrollDown();[m
+[31m-[m
+[31m-  return elem.innerHTML;[m
+[31m-}[m
+[31m-[m
+[31m-function CreateHearthpwnCard(result, elemid) {[m
+[31m-  var elem = document.getElementById(elemid);[m
+[31m-  var tempDiv = document.createElement('div');[m
+[31m-  tempDiv.innerHTML = result;[m
+[31m-[m
+[31m-  var title = tempDiv.querySelector("title");[m
+[31m-  var members = tempDiv.querySelectorAll(".col-name b a, .t-deck-details-card-list.class-listing h4, .t-deck-details-card-list.neutral-listing h4");[m
+[31m-[m
+[31m-  var deckstr = "<div class='inline-wrap'><div class='inline-preview hs'></div></div>" + [m
+[31m-    "<div class='inline-icon hs'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + [m
+[31m-    elem.firstChild.innerHTML + "'>" + title.textContent + "</a>\n<span>via <a href='http://www.hearthpwn.com'>Hearthpwn.com</a></span></div><div class='cardlist'><ul>";[m
+[31m-  for(j = 0; j < members.length; j++) {[m
+[31m-    if (members[j].nodeName == "H4") {[m
+[31m-      deckstr = deckstr + "<li class='separator'>" + members[j].innerHTML.trim() + "</li>";[m
+[31m-    } else {[m
+[31m-      var name = members[j].innerHTML.trim();[m
+[31m-      var qty = members[j].getAttribute("data-count");[m
+[31m-      deckstr = deckstr + "<li>" + (qty + "x [hs::" + name + "]</li>");[m
+[31m-    }[m
+[31m-  }[m
+[31m-  deckstr += "</ul></div>";[m
+[31m-  elem.innerHTML = deckstr;[m
+[31m-  elem.innerHTML = elem.innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, '<a class="tooltip noshow" data-preview="' + elemid + '" target="_blank" rel="$1">$2</a>');[m
+[31m-  [m
+[31m-  return elem.innerHTML;[m
+[31m-}[m
+[31m-[m
+[31m-function CreateHearthheadCard(result, elemid) {[m
+[31m-  var elem = document.getElementById(elemid);[m
+[31m-  var tempDiv = document.createElement('div');[m
+[31m-  tempDiv.innerHTML = result;[m
+[31m-[m
+[31m-  var title = tempDiv.querySelector("title");[m
+[31m-  var members = tempDiv.querySelectorAll(".deckguide-cards-type .heading-size-3, .deckguide-cards-type ul li");[m
+[31m-[m
+[31m-  var deckstr = "<div class='inline-wrap'><div class='inline-preview hs'></div></div>" + [m
+[31m-    "<div class='inline-icon hs'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + [m
+[31m-    elem.firstChild.innerHTML + "'>" + title.textContent + "</a>\n<span>via <a href='http://www.hearthhead.com'>Hearthhead.com</a></span></div><div class='cardlist'><ul>";[m
+[31m-  for(j = 0; j < members.length; j++) {[m
+[31m-    if (members[j].nodeName == "H2") {[m
+[31m-      deckstr = deckstr + "<li class='separator'>" + members[j]

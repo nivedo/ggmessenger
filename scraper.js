@@ -10,6 +10,9 @@ function getParser(url) {
 	if (url.indexOf('tappedout.net') > 0) {
 		return _parseTappedout;
 	}
+	if (url.indexOf('mtgtop8.com') > 0) {
+		return _parseMTGTop8;
+	}
 	if (url.indexOf('mtggoldfish.com/deck') > 0 || url.indexOf('mtggoldfish.com/archetype') > 0) {
 		return _parseMTGGoldfish;
 	}
@@ -26,6 +29,15 @@ function getParser(url) {
 		return _parseHearthhead;
 	}
 	return null;
+}
+
+function createCardElem(name, qty, type) {
+	var safeclass = utils.SafeCSSClass(name, type);
+	var elemstr = "<li>" + (qty + "x <a class='tooltip noshow' target='_blank' data-preview=\"" + 
+    	library.getstyle(safeclass) + "\" href=\"" + 
+		utils.GetCardURL(name, type) +
+	 	"\">" + name + "</a></li>");
+	return elemstr;
 }
 
 /* Scrapers */
@@ -52,11 +64,31 @@ function _parseTappedout(url, $) {
     			name = $(this).attr("data-name");
     			qty = $(this).attr("data-quantity");
     		}
-    		var safeclass = utils.SafeCSSClass(name, 'mtg');
-	    	deckstr = deckstr + "<li>" + (qty + "x <a class='tooltip noshow' target='_blank' data-preview=\"" + 
-		    	library.getstyle(safeclass) + "\" href=\"" + 
-	    		"http://gatherer.wizards.com/Pages/Card/Details.aspx?name=" + encodeURIComponent(name) + 
-	    	 	"\">" + name + "</a></li>");
+	    	deckstr = deckstr + createCardElem(name, qty, "mtg");
+	    }
+    });
+
+    deckstr += "</ul></div>";
+
+    return deckstr;
+}
+
+function _parseMTGTop8(url, $) {
+	var title = $("title").text();
+	var members = $(".O13, .G14");
+
+	var deckstr = "<div class='inline-wrap'><div class='inline-preview mtg'></div></div>" + 
+    	"<div class='inline-icon mtg'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
+    	url + "'>" + title + "</a>\n<span>via <a href='http://www.mtgtop8.com'>MTGTop8.com</a></span></div><div class='cardlist'><ul>";
+
+    members.each(function(index) {
+    	if($(this).hasClass("O13")) {
+    		deckstr = deckstr + "<li class='separator'>" + $(this).text().trim() + "</li>";
+    	} else {
+    		var name = $(this).find(".L14").text().trim();
+    		$(this).find(".L14").remove();
+    		var qty = $(this).text().trim();
+    		deckstr = deckstr + createCardElem(name, qty, "mtg");
 	    }
     });
 
@@ -80,11 +112,7 @@ function _parseMTGGoldfish(url, $) {
 	    	if($(this).find(".deck-col-qty").length > 0 && $(this).find(".deck-col-card a").length > 0) {
 	    		var qty = $(this).find(".deck-col-qty").text().trim();
 		    	var name = $(this).find(".deck-col-card a").text().trim();
-	    		var safeclass = utils.SafeCSSClass(name, 'mtg');
-			    deckstr = deckstr + "<li>" + (qty + "x <a class='tooltip noshow' target='_blank' data-preview=\"" + 
-			    	library.getstyle(safeclass) + "\" href=\"" + 
-		    		"http://gatherer.wizards.com/Pages/Card/Details.aspx?name=" + encodeURIComponent(name) + 
-		    	 	"\">" + name + "</a></li>");
+	    		deckstr = deckstr + createCardElem(name, qty, "mtg");
 	    	}
 	    }
     });
@@ -96,6 +124,7 @@ function _parseMTGGoldfish(url, $) {
 
 function _parseMTGSalvation(url, $) {
 	var deckwrap = $(".forum-deck-wrapper .deck");
+	if(deckwrap.length == 0) { return ""; }
 	var deckinfo = JSON.parse(deckwrap.attr("data-card-list"));
 	var members = deckinfo["Deck"];
 	var title = $("header.caption-threads h2").text();
@@ -107,11 +136,7 @@ function _parseMTGSalvation(url, $) {
 	for(var j = 0; j < members.length; j++) {
 	    var name = members[j]["CardName"];
 	    var qty = members[j]["Qty"];
-	    var safeclass = utils.SafeCSSClass(name, 'mtg');
-	    deckstr = deckstr + "<li>" + (qty + "x <a class='tooltip noshow' target='_blank' data-preview=\"" + 
-	    	library.getstyle(safeclass) + "\" href=\"" + 
-    		"http://gatherer.wizards.com/Pages/Card/Details.aspx?name=" + encodeURIComponent(name) + 
-    	 	"\">" + name + "</a></li>");
+	    deckstr = deckstr + createCardElem(name, qty, "mtg");
 	}
 
 	deckstr += "</ul></div>";
@@ -135,11 +160,7 @@ function _parseChannelFireball(url, $) {
     	} else {
     		var qty = $(this).find(".qty").text().trim();
 	    	var name = $(this).attr('data-name');
-    		var safeclass = utils.SafeCSSClass(name, 'mtg');
-		    deckstr = deckstr + "<li>" + (qty + "x <a class='tooltip noshow' target='_blank' data-preview=\"" + 
-		    	library.getstyle(safeclass) + "\" href=\"" + 
-	    		"http://gatherer.wizards.com/Pages/Card/Details.aspx?name=" + encodeURIComponent(name) + 
-	    	 	"\">" + name + "</a></li>");
+    		deckstr = deckstr + createCardElem(name, qty, "mtg");
 	    }
     });
 
@@ -162,11 +183,7 @@ function _parseHearthpwn(url, $) {
     	} else {
     		var name = $(this).text().trim();
 		    var qty = $(this).attr("data-count");
-		    var safeclass = utils.SafeCSSClass(name, 'hs');
-		    deckstr = deckstr + "<li>" + (qty + "x <a class='tooltip noshow' target='_blank' data-preview=\"" + 
-		    	library.getstyle(safeclass) + "\" href=\"" + 
-		    	"http://www.hearthpwn.com/cards?filter-name=" + encodeURIComponent(name) +
-		    	"\">" + name + "</a></li>");
+		    deckstr = deckstr + createCardElem(name, qty, "hs");
     	}
     });
 
@@ -193,11 +210,7 @@ function _parseHearthhead(url, $) {
 		    if (qty == "") {
         		qty = 1;
       		}
-		    var safeclass = utils.SafeCSSClass(name, 'hs');
-		    deckstr = deckstr + "<li>" + (qty + "x <a class='tooltip noshow' target='_blank' data-preview=\"" + 
-		    	library.getstyle(safeclass) + "\" href=\"" + 
-		    	"http://www.hearthpwn.com/cards?filter-name=" + encodeURIComponent(name) +
-		    	"\">" + name + "</a></li>");
+		    deckstr = deckstr + createCardElem(name, qty, "hs");
     	}
     });
 

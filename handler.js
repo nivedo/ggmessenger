@@ -14,8 +14,12 @@ function handleSticker(raw) {
     	return null;
     }
 	var split = raw.substring(1,raw.length-1).split("::");
-  	var safeclass = utils.SafeCSSClass(split[1], split[0]);
-  	var innerHTML = '<div class="sticker ' + safeclass + '" style="' + library.getstyle(safeclass) + '"></div>';
+	var type = split[0];
+	var name = split[1];
+  	var safeclass = utils.SafeCSSClass(name, type);
+  	var url = utils.GetCardURL(name, type);
+  	var innerHTML = '<a target="_blank" href="' + url + 
+  		'"><div class="sticker ' + safeclass + '" style="' + library.getstyle(safeclass) + '"></div></a>';
 
   	return innerHTML;
 }
@@ -33,7 +37,7 @@ function handleTooltips(raw) {
 		return raw.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, function(match, $1, $2) {
 			var safeclass = utils.SafeCSSClass($2, $1);
 			var style = library.getstyle(safeclass);
-			return '<a class="tooltip" target="_blank" rel="' + $1 + '" data-preview="' + style + '">' + $2 + '</a>';
+			return '<a class="tooltip" target="_blank" href="' + utils.GetCardURL($2, $1) + '" rel="' + $1 + '" data-preview="' + style + '">' + $2 + '</a>';
 		});
 	}
 	return null;
@@ -42,6 +46,11 @@ function handleTooltips(raw) {
 function parseWithPromises(messages) {
 	var promises = [];
 	var results = [];
+	var win = BrowserWindow.getAllWindows()[0];
+
+	if(messages.length == 0) {
+		win.webContents.send("message-callback", results);
+	}
 
 	for(var i = 0; i < messages.length; i++) {
 		var msg = messages[i];
@@ -78,10 +87,10 @@ function parseWithPromises(messages) {
 
 	Promise.all(promises).then(function(values) {
 		results = results.concat(values);
-		var win = BrowserWindow.getAllWindows()[0];
 		win.webContents.send("message-callback", results);
 		var lastid = messages[messages.length-1][0];
 		win.webContents.send("scroll-to", [lastid]);
+		win.webContents.send("check-ready");
 	}, function(reason) {
 		console.log(reason);
 	});

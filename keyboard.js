@@ -120,9 +120,7 @@ function SetKeyboardEvents() {
     var content = textbox.firstChild.firstChild.textContent;
     var keytype = document.querySelector(".icon").alt;
 
-    if (content.length > 0) {
-      ipc.send('autocomplete', [keytype, content]);
-    }
+    ipc.send('autocomplete', [keytype, content]);
   };
 }
 
