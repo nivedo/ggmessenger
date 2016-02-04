@@ -11,9 +11,22 @@ Supports both OSX and Windows.  Based on [*Caprine*](https://github.com/sindreso
 
 ### Easy card linking
 
-Link any card from either Hearthstone or Magic with '@cardname' and autocomplete.
+Link any card from either Hearthstone or Magic with '@cardname' and autocomplete.  Toggle the game by clicking on the MTG / Hearthstone Icon.
 
-![](media/screen1.png)]
+### Inline card tooltips
+
+Use a card name with tooltip in any sentence by typing [mtg::cardname] for Magic cards and [hs::cardname] for Hearthstone cards.  For example:
+
+```
+I ate a [mtg::black lotus], pooped a [mtg::lotus petal], and went [mtg::berserk].
+```
+
+![](media/screen4.png)
+
+## More screenshots
+
+![](media/screen1.png)
+![](media/screen2.png)
 
 ## Dev
 
