@@ -38,6 +38,13 @@ GGMessenger automatically expands decks from URLs that it recognizes.  Currently
 * [HearthPwn](hearthpwn.com)
 * [HearthHead](hearthhead.com)
 
+### Work in progress
+
+Other features in the works (but not quite done yet...)
+
+* Linking / importing deck from Hearthstone or MTGO client (PC only)
+* TCGPlayer pricing next to card names.
+
 ## Screenshots
 
 ![](media/screen1.png)
