@@ -13,8 +13,6 @@ Supports both OSX and Windows.  Based on [*Caprine*](https://github.com/sindreso
 
 Link any card from either Hearthstone or Magic with '@cardname' and autocomplete.  Toggle the game by clicking on the MTG / Hearthstone Icon.
 
-![](media/screen1.png)
-
 ### Inline card tooltips
 
 Use a card name with tooltip in any sentence by typing [mtg::cardname] for Magic cards and [hs::cardname] for Hearthstone cards.  For example:
@@ -39,6 +37,11 @@ GGMessenger automatically expands decks from URLs that it recognizes.  Currently
 ###### Hearthstone
 * [hearthpwn.com](HearthPwn)
 * [hearthhead.com](HearthHead)
+
+## Screenshots
+
+![](media/screen1.png)
+![](media/screen2.png)
 
 ## Dev
 
