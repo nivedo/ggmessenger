@@ -36,6 +36,16 @@ Notification.permission = NativeNotification.permission;
 Notification.requestPermission = NativeNotification.requestPermission.bind(Notification);
 /* eslint-enable no-native-reassign, no-undef */
 
+function SetTitle() {
+	var isSplash = document.querySelector("._3v_v") != undefined;
+	if (isSplash) {
+		var title = document.querySelector("._3v_v h1._5hy4");
+		var subtitle = document.querySelector("._3v_v ._3403");
+		title.innerHTML = "GGMessenger";
+		subtitle.innerHTML = "An unofficial Facebook Messenger for gamers.\n Sign in with Facebook to get started."
+	}
+}
+
 function DisplayReady() {
 	var blocks = document.querySelectorAll('._1t_p');
 	var allready = true;
@@ -237,4 +247,8 @@ ipc.on('scroll-to', (evt, args) => {
 
 ipc.on('create-keyboard', (evt, args) => {
 	keyboard.init(args[0]);
+});
+
+ipc.on('set-splash', () => {
+	SetTitle();
 });

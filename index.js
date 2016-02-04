@@ -86,6 +86,7 @@ app.on('ready', () => {
 
 	page.on('dom-ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));
+		page.send('set-splash');
 		mainWindow.show();
 	});
 

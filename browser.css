@@ -2,66 +2,19 @@ html {
 	overflow: hidden;
 }
 
-/*
-._20bp, ._z4_ {
-	font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
-}
-*/
-
-/* THEME 1 */
-/*
-._1q5- {
-  background-image: url("http://www.noahbradley.com/images/Noah-Bradley_A-Place-To-Call-Home.jpg") !important;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-._5742, ._49ou, ._4_j5 {
-  background-color: rgba(255,255,255,0.6) !important;
-}
-._4rv3 {
-  background-color: rgba(0,0,0,0.5) !important;
-}
-._llj {
-  border-bottom: 1px solid rgba(255,255,255, .05) !important;
-}
-time._3oh- {
-  background-color: rgba(255,255,255,0.3) !important;
-  padding: 3px 15px;
-  border-radius: 8px;
-}
-._llq, ._36zg, ._45m_._2vxa, ._1n-e {
-  color: #ddd !important;
-}
-._497p {
-  color: #eee !important;
-}
-*/
-/*
-._1t_p {
-  visibility: hidden;
-}
-
-._1t_p.show {
-  visibility: visible;
-}
-
-._497p._2lpt {
-  visibility: hidden;
-}
-
-._497p._2lpt.show {
-  visibility: visible;
-}
-*/
-
 #js_1 {
   visibility: hidden;
 }
 
 #js_1.show {
+  visibility: visible;
+}
+
+._1p1t ._1p1v {
+  visibility: hidden;
+}
+
+._1p1t ._1p1v.show {
   visibility: visible;
 }
 
@@ -114,7 +67,7 @@ time._3oh- {
   /*
   background-color: #cfd8dc !important;
   */
-  background-color: #E6EBD5 !important;
+  background-color: #F5FAFA !important;
   color: #141823 !important;
 }
 
@@ -125,6 +78,9 @@ time._3oh- {
 .hidecard ._15gf {
   display: none !important;
 }
+
+._15gf {
+  display: none !important;
 }
 
 ._4_j5._4t9y {

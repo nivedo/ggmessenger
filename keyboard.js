@@ -36,6 +36,7 @@ function CreateKeyboard(default_type) {
   }
 
   SetKeyboardEvents();
+  SetPlaceholder();
 }
 
 function ClearAuto() {
@@ -104,16 +105,19 @@ function SetAutocomplete(results, partial) {
   autoarea.appendChild(autoul);
 }
 
+function SetPlaceholder() {
+  var placeElem = document.querySelector("._1p1t ._1p1v");
+  if(placeElem && placeElem.className.indexOf("show") == -1) {
+    placeElem.innerHTML = "Type a message, or link a card with @cardname...";
+    placeElem.className += " show";
+  }
+}
+
 function SetKeyboardType(keytype) {
   document.querySelector(".icon").alt = keytype;
 }
 
 function SetKeyboardEvents() {
-  document.querySelector("._5irm").onkeydown = function(e) {
-    if (e.keyCode == 13 && !e.shiftKey) {
-      e.preventDefault();
-    }
-  };
   document.onkeyup = function (e) {
     ClearAuto();
     var textbox = document.querySelector("._45m_._2vxa");
@@ -121,6 +125,8 @@ function SetKeyboardEvents() {
     var keytype = document.querySelector(".icon").alt;
 
     ipc.send('autocomplete', [keytype, content]);
+
+    if(content.length == 0) SetPlaceholder();
   };
 }
 

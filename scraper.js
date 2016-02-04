@@ -31,11 +31,11 @@ function getParser(url) {
 	return null;
 }
 
-function createCardElem(name, qty, type) {
+function createCardElem(name, qty, type, href) {
 	var safeclass = utils.SafeCSSClass(name, type);
+	if(href == undefined) href = utils.GetCardURL(name, type);
 	var elemstr = "<li>" + (qty + "x <a class='tooltip noshow' target='_blank' data-preview=\"" + 
-    	library.getstyle(safeclass) + "\" href=\"" + 
-		utils.GetCardURL(name, type) +
+    	library.getstyle(safeclass) + "\" href=\"" + href +
 	 	"\">" + name + "</a></li>");
 	return elemstr;
 }

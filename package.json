@@ -10,7 +10,7 @@
     "email": "jayxni@gmail.com",
     "url": "gg.chat"
   },
-  "electronVersion": "0.36.4",
+  "electronVersion": "0.36.7",
   "scripts": {
     "test": "xo",
     "start": "electron .",
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "electron-packager": "^5.2.0",
-    "electron-prebuilt": "^0.36.4",
+    "electron-prebuilt": "^0.36.7",
     "xo": "*"
   },
   "xo": {
