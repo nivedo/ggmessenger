@@ -252,7 +252,7 @@ const helpSubmenu = [
 	{
 		label: `${appName} Website...`,
 		click() {
-			shell.openExternal('http://gg.chat');
+			shell.openExternal('https://github.com/nivedo/ggmessenger');
 		}
 	},
 	{
