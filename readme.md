@@ -2,17 +2,15 @@
 
 > An unofficial Facebook Messenger for Magic & Hearthstone addicts.
 
-<br>
-[![](media/screen3.png)](https://github.com/sindresorhus/caprine/releases/latest)
-
 Supports both OSX and Windows.  Based on [*Caprine*](https://github.com/sindresorhus/caprine/releases/latest) by Sindre Sorhus.
-
-## Installation
 
 NOTE: Your computer must have access to MTG / Hearthstone sites to support integrations.  Firewalls will prevent integrations from working.
 
-* [OSX 10.9+](https://www.dropbox.com/s/o0r8pty6shubwqb/GGMessenger-osx-0.4.0.zip?dl=0)
-* [Windows 7+](https://www.dropbox.com/s/d8kwqkukferm0xj/GGMessenger-v0.4.0.exe?dl=0)
+* [OSX 10.9+ Zip](https://www.dropbox.com/s/o0r8pty6shubwqb/GGMessenger-osx-0.4.0.zip?dl=0)
+* [Windows 7+ Installer](https://www.dropbox.com/s/d8kwqkukferm0xj/GGMessenger-v0.4.0.exe?dl=0)
+
+<br>
+[![](media/screen3.png)](https://github.com/sindresorhus/caprine/releases/latest)
 
 ## Features
 
