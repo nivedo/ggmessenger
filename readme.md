@@ -28,15 +28,15 @@ I ate a [mtg::black lotus], pooped a [mtg::lotus petal], and went [mtg::berserk]
 GGMessenger automatically expands decks from URLs that it recognizes.  Currently, it supports:
 
 ###### MTG
-* [tappedout.net](Tappedout)
-* [mtgtop8.com](MTG Top 8)
-* [mtggoldfish.com](MTGGoldfish)
-* [mtgsalvation.com](MTGSalvation)
-* [channelfireball.com](Channel Fireball)
+* [TappedOut.net](tappedout.net)
+* [MTGTop8](mtgtop8.com)
+* [MTGGoldfish](mtggoldfish.com)
+* [MTGSalvation](mtgsalvation.com)
+* [Channel Fireball](channelfireball.com)
 
 ###### Hearthstone
-* [hearthpwn.com](HearthPwn)
-* [hearthhead.com](HearthHead)
+* [HearthPwn](hearthpwn.com)
+* [HearthHead](hearthhead.com)
 
 ## Screenshots
 
