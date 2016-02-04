@@ -9,8 +9,10 @@ Supports both OSX and Windows.  Based on [*Caprine*](https://github.com/sindreso
 
 ## Installation
 
-[OSX 10.9+ Installer](https://www.dropbox.com/s/o0r8pty6shubwqb/GGMessenger-osx-0.4.0.zip?dl=0)
-[Windows 7+ Installer](https://www.dropbox.com/s/d8kwqkukferm0xj/GGMessenger-v0.4.0.exe?dl=0)
+NOTE: Your computer must have access to MTG / Hearthstone sites to support integrations.  Firewalls will prevent integrations from working.
+
+* [OSX 10.9+](https://www.dropbox.com/s/o0r8pty6shubwqb/GGMessenger-osx-0.4.0.zip?dl=0)
+* [Windows 7+](https://www.dropbox.com/s/d8kwqkukferm0xj/GGMessenger-v0.4.0.exe?dl=0)
 
 ## Features
 
