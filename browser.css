@@ -18,6 +18,32 @@ html {
   visibility: visible;
 }
 
+/* Keyboard */
+/*
+._kmc ._5rp7._5rp8 {
+  display: none;
+}
+
+._kmc {
+  overflow: hidden;
+}
+
+.custom-key {
+  border: none;
+  width: 100%;
+  resize: none;
+  overflow: hidden;
+  font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif !important;
+  font-size: 14px;
+  height: 1.25em;
+  padding: 0;
+}
+
+.custom-key:focus {
+  outline: none;
+}
+*/
+
 /* THEME 2 */
 ._1enh, ._1enh ._1ht1, ._1enh ._5t4c, ._1enh ._5l37 {
   background-color: #224760 !important;

@@ -42,7 +42,8 @@
     "electron-dl": "^0.2.0",
     "cheerio": "^0.20.0",
     "request": "^2.69.0",
-    "triejs": "^0.1.5"
+    "triejs": "^0.1.5",
+    "autosize": "^3.0.15"
   },
   "devDependencies": {
     "electron-packager": "^5.2.0",

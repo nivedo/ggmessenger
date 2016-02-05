@@ -8,6 +8,10 @@ exports.GetCardURL = (name, type) => {
   return _CARDURL[type] + encodeURIComponent(name.replace(/[\u2018\u2019]/g, "'"));
 }
 
+exports.GetImageURL = (bundleid, cardid, ext) => {
+  return "https://d1fyt5lxvxva06.cloudfront.net/" + bundleid + "/" +  cardid + "." + ext;
+}
+
 exports.SafeCSSClass = (name, type) => {
   var namestr = exports.NormString(type) + "_" + exports.NormString(name);
   return namestr;

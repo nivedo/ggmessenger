@@ -3,6 +3,9 @@ const https = require('https');
 const utils = require('./utils');
 const Triejs = require('triejs');
 const ipc = require('electron').ipcMain;
+const cheerio = require("cheerio");
+const request = require("request");
+const fs = require("fs");
 
 var trieMap = {};
 var styleMap = {};
@@ -38,8 +41,7 @@ function loadHelper(lib, extracss, type) {
 		var ext = lib[i]["ext"];
 		var sublib = lib[i]["assets"];
 		for( var j = 0; j < sublib.length; j++) {
-			var imgsrc = "https://d1fyt5lxvxva06.cloudfront.net/" + bundleId + 
-				"/" +  sublib[j]["id"] + "." + ext;
+			var imgsrc = utils.GetImageURL(bundleId, sublib[j]["id"], ext);
 			var cssstr = extracss + 
 				"background-image:url('" + imgsrc + "') !important;";
 			// Hacky "async" optimization to not lock UI
@@ -59,7 +61,7 @@ function loadHelper(lib, extracss, type) {
 		        		utils.TrieString(nextword) + 
 		        		'", {name: "' + 
 		        		name.replace(/"/g, '\\"') + 
-		        		'", type: "' + type + '", css: "' + cssstr + '"});';
+		        		'", id: "' + sublib[j]["id"] + '", type: "' + type + '", css: "' + cssstr + '"});';
 					jsfull += jsline;
 		        }
 		        lastword = nextword;

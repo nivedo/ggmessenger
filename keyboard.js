@@ -1,8 +1,26 @@
 'use strict';
-const utils = require('./utils')
+const utils = require('./utils');
+const autosize = require('autosize');
 const ipc = require('electron').ipcRenderer;
 
-function CreateKeyboard(default_type) {
+function CreateCustomKeyboard(default_type) {
+  var inputbox = document.querySelector("._5irm ._kmc");
+  if (inputbox.querySelector(".custom-key") == undefined) {
+    var newbox = document.createElement("textarea");
+    newbox.className = "custom-key";
+    newbox.setAttribute("placeholder","Type a message, or link a card with @cardname...");
+    inputbox.onkeyup = function (e) {
+      ClearAuto();
+      var content = document.querySelector(".custom-key").value;
+      var keytype = document.querySelector(".icon").alt;
+      ipc.send('autocomplete', [keytype, content]);
+    };
+    //autosize(newbox);
+    inputbox.appendChild(newbox);
+  }
+}
+
+function CreateAutocomplete(default_type) {
   var inputbox = document.querySelector("._5irm");
   var iconwrap = document.createElement("div");
   iconwrap.className = "key-icon";
@@ -46,6 +64,19 @@ function ClearAuto() {
   autoarea.appendChild(autoul);
 }
 
+function SendMessage(msg) {
+  var textbox = document.querySelector("._45m_._2vxa");
+
+  /* MAGIC: send a facebook "sticker" */
+  var tmp = textbox[Object.getOwnPropertyNames(textbox)[0]]._currentElement._owner._currentElement._owner._currentElement._owner._currentElement._owner._instance;
+  tmp.props.onMessageSend(msg)
+  tmp._typingDetector.resetState();
+  tmp._resetState(function() {
+    return this._saveCurrentEditorState();
+  });
+  //document.querySelector(".custom-key").value = "";
+}
+
 function SetAutocomplete(results, partial) {
   var keytype = document.querySelector(".icon").alt;
   var autoarea = document.querySelector(".auto-region");
@@ -74,16 +105,8 @@ function SetAutocomplete(results, partial) {
       
       link.onclick = function() {
         var partial = document.querySelector(".auto-region").alt;
-        var textbox = document.querySelector("._45m_._2vxa");
+        SendMessage("[" + keytype + "::" + this.textContent + "]");
 
-        /* MAGIC: send a facebook "sticker" */
-        var tmp = textbox[Object.getOwnPropertyNames(textbox)[0]]._currentElement._owner._currentElement._owner._currentElement._owner._currentElement._owner._instance;
-        tmp.props.onMessageSend("[" + keytype + "::" + this.textContent + "]")
-        tmp._typingDetector.resetState();
-        tmp._resetState(function() {
-          return this._saveCurrentEditorState();
-        });
-        
         // Clear preview area
         preview.className = "preview-region";
         autoarea.style.display = "none";
@@ -147,5 +170,6 @@ ipc.on('autocomplete', (evt, results) => {
 /* Exports */
 
 exports.init = (default_type) => {
-  CreateKeyboard(default_type);
+  CreateAutocomplete(default_type);
+  //CreateCustomKeyboard(default_type);
 }
