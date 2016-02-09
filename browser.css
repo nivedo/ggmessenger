@@ -386,6 +386,14 @@ html {
   border: none;
 }
 
+.auto-region ul li:first-of-type a:after {
+  content: "(Tab insert)";
+  float: right;
+  text-align: right;
+  margin-right: 20px;
+  color: #bababa !important;
+}
+
 /**
  * Tooltip Styles
  */
