@@ -51,6 +51,12 @@ function CreateCustomKeyboard(default_type) {
     newbox.className = "custom-key";
     newbox.id = "customkey";
     newbox.setAttribute("contenteditable", true);
+    // Copy paste should be text only.
+    newbox.addEventListener("paste", function(e) {
+      e.preventDefault();
+      var text = e.clipboardData.getData("text/plain");
+      document.execCommand("insertHTML", false, text);
+    });
     //newbox.innerHTML = "Type a message, or link a card with @cardname...";
     inputbox.onkeydown = function(e) {
       if (e.keyCode == '13' && !e.shiftKey) {
@@ -131,6 +137,11 @@ function SendMessage(msg) {
     return this._saveCurrentEditorState();
   });
   //document.querySelector(".custom-key").value = "";
+}
+
+function SetKeyboardTooltips() {
+  var contentbox = document.querySelector(".custom-key");
+  var tooltips = contentbox.querySelectorAll(".tooltip");
 }
 
 function InsertCard(keytype, name) {
@@ -241,6 +252,7 @@ ipc.on('keyboard-modify', (evt, args) => {
   var contentbox = document.querySelector(".custom-key")
 
   contentbox.innerHTML = replaceContent;
+  SetKeyboardTooltips();
   AlignKeyboard();
   ClearAuto();
   placeCaretAtEnd(contentbox);

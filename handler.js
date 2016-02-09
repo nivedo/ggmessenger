@@ -24,7 +24,7 @@ function handleSticker(raw) {
   	}
   	var	innerHTML = '<a target="_blank" href="' + url + 
   		'"><div class="sticker ' + safeclass + '" style="' + style + '"></div></a>';
-  		
+
   	return innerHTML;
 }
 
@@ -58,7 +58,7 @@ function processKeyboard(keytype, content) {
 		if (style != undefined) {
 			return '<a class="tooltip" target="_blank" contenteditable="false" href="' + utils.GetCardURL($2, $1) + '" rel="' + $1 + '" data-preview="' + style + '">' + $2 + '</a> ';
 		} else {
-			return '';
+			return '[' + $1 + "::" + $2 + ']';
 		}
 	});
 	var p2 = p1.replace(/\[([^\[\]]+)\]/g, function(match, $1) {
@@ -67,7 +67,7 @@ function processKeyboard(keytype, content) {
 		if (style != undefined) {
 			return '<a class="tooltip" target="_blank" contenteditable="false" href="' + utils.GetCardURL($1, keytype) + '" rel="' + keytype + '" data-preview="' + style + '">' + $1 + '</a> ';
 		} else {
-			return '';
+			return '[' + $1 + ']';
 		}
 	});
 	return p2;

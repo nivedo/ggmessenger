@@ -46,34 +46,6 @@ function SetTitle() {
 	}
 }
 
-function DisplayReady() {
-	var blocks = document.querySelectorAll('._1t_p');
-	var allready = true;
-	for(var i = 0; i < blocks.length; i++) {
-		var block = blocks[i];
-		var elems = block.querySelectorAll('._hh7 > span._3oh-');
-		var ready = true;
-		for(var j = 0; j < elems.length; j++) {
-			if (!elems[j].hasAttribute('data-ready')) {
-				ready = false;
-				allready = false;
-				break;
-			}
-		}
-		if (ready) {
-			block.className += " show";
-		}
-	}
-	if (allready) {
-		var times = document.querySelectorAll('._497p._2lpt');
-		for(var i = 0; i < times.length; i++) {
-			if(times[i].className.indexOf("show") == -1) {
-				times[i].className += " show";
-			}
-		}
-	}
-}
-
 function DisplayReadyV2() {
 	var js1 = document.getElementById("js_1");
 	if(js1.className.indexOf("show") > 0) return;
@@ -130,6 +102,15 @@ function ProcessTooltips() {
   }
 }
 
+function FixPreviewMessages() {
+	var previews = document.querySelectorAll("._1htf span");
+	for(var i = 0; i < previews.length; i++) {
+		previews[i].innerHTML = previews[i].innerHTML.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, function(match, $1, $2) {
+			return $2.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+		});
+	}
+}
+
 function RefreshAll() {
 	var elems = document.querySelectorAll('._hh7 > span._3oh-'), i, elem;
 	var count = 0;
@@ -153,6 +134,8 @@ function RefreshAll() {
 			count++;
 		}
 	}
+
+	FixPreviewMessages();
 	ipc.send('handle-messages',messages);
 }
 
