@@ -69,7 +69,7 @@ function CreateCustomKeyboard(default_type) {
         return;
       }
       var contentbox = document.getElementById("customkey");
-      var content = contentbox.innerHTML;
+      var content = contentbox.innerHTML.replace(/&nbsp;/g,'');
       AlignKeyboard();
       ClearAuto();
       var keytype = document.querySelector(".icon").alt;

@@ -207,6 +207,8 @@ ipc.on('message-callback', (evt,results) => {
 			var cloneElems = clone.querySelectorAll("._hh7 > span._3oh-");
 			for(var j = 0; j < cloneElems.length; j++) {
 				cloneElems[j].id += "-clone";
+				//cloneElems[j].innerHTML = replaceContent;
+				//cloneElems[j].parentNode.style.cssText = 'border: 1px solid #ddd; background-color:transparent !important';
 			}
 			refNode.parentNode.insertBefore(clone, refNode);
 			elem.parentNode.style.cssText = 'border: 1px solid #ddd; background-color:transparent !important';

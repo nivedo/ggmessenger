@@ -86,7 +86,7 @@ function autoComplete(keytype, content) {
 
 	if (content.length == 0) return results;
 
-	if (content.length > 0 && content.charAt(0) == "@") {
+	if (content.charAt(0) == "@") {
       var searchstr = utils.TrieString(content.substring(1));
       var fullres = trieMap[keytype].find(searchstr);
       if (fullres != undefined) {
@@ -99,10 +99,10 @@ function autoComplete(keytype, content) {
     } else {
       var lasttoken = content.trim().split(']').pop();
       var endpart = lasttoken.trim().split('[');
-
+      
       if (endpart.length > 1) {
         var opentoken = endpart.pop();
-        opentoken = opentoken.split("::").pop().trim();
+        opentoken = opentoken.split("::").pop();
         var n = content.lastIndexOf(opentoken);
         partial = content.slice(0,n-1);
 
