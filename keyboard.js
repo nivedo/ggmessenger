@@ -29,6 +29,13 @@ function placeCaretAtEnd(el) {
   }
 }
 
+function OnChange() {
+  AlignKeyboard();
+  ClearAuto();
+  SetKeyboardTooltips();
+  placeCaretAtEnd(document.querySelector(".custom-key"));
+}
+
 function Send() {
   var contentbox = document.querySelector(".custom-key");
   var tooltips = contentbox.querySelectorAll(".tooltip");
@@ -69,7 +76,7 @@ function CreateCustomKeyboard(default_type) {
         return;
       }
       var contentbox = document.getElementById("customkey");
-      var content = contentbox.innerHTML.replace(/&nbsp;/g,'');
+      var content = contentbox.innerHTML.replace(/&nbsp;/g,' ');
       AlignKeyboard();
       ClearAuto();
       var keytype = document.querySelector(".icon").alt;
@@ -136,12 +143,21 @@ function SendMessage(msg) {
   tmp._resetState(function() {
     return this._saveCurrentEditorState();
   });
-  //document.querySelector(".custom-key").value = "";
 }
 
 function SetKeyboardTooltips() {
-  var contentbox = document.querySelector(".custom-key");
-  var tooltips = contentbox.querySelectorAll(".tooltip");
+  var contentbox = document.getElementById("customkey");
+  var tooltips = contentbox.querySelectorAll("a"), link, i;
+  var preview = document.querySelector(".preview-region");
+  for(i = 0; i < tooltips.length; i++) {
+    link = tooltips[i];
+    link.onmouseover = function() {
+      SetKeyboardPreview(this.getAttribute("rel"), this.textContent, this.getAttribute("style-preview"));
+    };
+    link.onmouseout = function() {
+      ClearKeyboardPreview();
+    };
+  }
 }
 
 function InsertCard(keytype, name) {
@@ -154,6 +170,20 @@ function InsertCard(keytype, name) {
   AlignKeyboard();
   ClearAuto();
   ipc.send('process-keyboard', [keytype, contentbox.innerHTML, true]);
+}
+
+function SetKeyboardPreview(keytype, name, style) {
+  var preview = document.querySelector(".preview-region");
+  preview.style.display = "block";
+  preview.className = "preview-region sticker " + utils.SafeCSSClass(name, keytype);
+  preview.style.cssText = style;
+}
+
+function ClearKeyboardPreview() {
+  var preview = document.querySelector(".preview-region");
+  preview.style.display = "none";
+  preview.className = "preview-region";
+  preview.style.cssText = "";
 }
 
 function SetAutocomplete(results, partial) {
@@ -174,23 +204,16 @@ function SetAutocomplete(results, partial) {
       link.textContent = results[i]["name"];
       link.setAttribute("style-preview", results[i]["css"]);
       link.onmouseover = function() {
-        preview.className = "preview-region sticker " + utils.SafeCSSClass(this.textContent, keytype);
-        preview.style.cssText = this.getAttribute("style-preview");
+        SetKeyboardPreview(keytype, this.textContent, this.getAttribute("style-preview") + "top: -490px !important;");
       };
       link.onmouseout = function() {
-        preview.className = "preview-region";
-        preview.style.cssText = "";
+        ClearKeyboardPreview();
       };
       
       link.onclick = function() {
         var partial = document.querySelector(".auto-region").alt;
         InsertCard(keytype, this.textContent);
-        //SendMessage("[" + keytype + "::" + this.textContent + "]");
-
-        // Clear preview area
-        preview.className = "preview-region";
-        autoarea.style.display = "none";
-        preview.style.display = "none";
+        ClearKeyboardPreview();
       };
       li.appendChild(link);
       autoul.appendChild(li);
@@ -199,10 +222,8 @@ function SetAutocomplete(results, partial) {
   }
   if (noresults) {
     autoarea.style.display = "none";
-    preview.style.display = "none";
   } else {
     autoarea.style.display = "block";
-    preview.style.display = "block";
   }
   preview.className = "preview-region";
   autoarea.appendChild(autoul);
@@ -233,35 +254,17 @@ function SetKeyboardEvents() {
   };
 }
 
-/* IPC callback */
-
-ipc.on('autocomplete', (evt, results) => {
-  var autoarea = document.querySelector(".auto-region");
-  var preview = document.querySelector(".preview-region");
-
-  if (results.length > 0) {
-    SetAutocomplete(results, '');
-  } else {
-    autoarea.style.display = "none";
-    preview.style.display = "none";
-  }
-});
-
-ipc.on('keyboard-modify', (evt, args) => {
-  var replaceContent = args[0];
-  var contentbox = document.querySelector(".custom-key")
-
-  contentbox.innerHTML = replaceContent;
-  SetKeyboardTooltips();
-  AlignKeyboard();
-  ClearAuto();
-  placeCaretAtEnd(contentbox);
-});
-
-
 /* Exports */
 
 exports.init = (default_type) => {
   CreateAutocomplete(default_type);
   CreateCustomKeyboard(default_type);
+}
+
+exports.setResults = (results) => {
+  SetAutocomplete(results, '');
+}
+
+exports.changed = () => {
+  OnChange();
 }

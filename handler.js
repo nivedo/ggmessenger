@@ -56,7 +56,7 @@ function processKeyboard(keytype, content) {
 		var safeclass = utils.SafeCSSClass($2, $1);
 		var style = library.getstyle(safeclass);
 		if (style != undefined) {
-			return '<a class="tooltip" target="_blank" contenteditable="false" href="' + utils.GetCardURL($2, $1) + '" rel="' + $1 + '" data-preview="' + style + '">' + $2 + '</a> ';
+			return '<a class="tooltip" target="_blank" contenteditable="false" href="' + utils.GetCardURL($2, $1) + '" rel="' + $1 + '" style-preview="' + style + '">' + $2 + '</a> ';
 		} else {
 			return '[' + $1 + "::" + $2 + ']';
 		}
@@ -65,7 +65,7 @@ function processKeyboard(keytype, content) {
 		var safeclass = utils.SafeCSSClass($1, keytype);
 		var style = library.getstyle(safeclass);
 		if (style != undefined) {
-			return '<a class="tooltip" target="_blank" contenteditable="false" href="' + utils.GetCardURL($1, keytype) + '" rel="' + keytype + '" data-preview="' + style + '">' + $1 + '</a> ';
+			return '<a class="tooltip" target="_blank" contenteditable="false" href="' + utils.GetCardURL($1, keytype) + '" rel="' + keytype + '" style-preview="' + style + '">' + $1 + '</a> ';
 		} else {
 			return '[' + $1 + ']';
 		}

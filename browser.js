@@ -237,3 +237,23 @@ ipc.on('create-keyboard', (evt, args) => {
 ipc.on('set-splash', () => {
 	SetTitle();
 });
+
+ipc.on('autocomplete', (evt, results) => {
+  var autoarea = document.querySelector(".auto-region");
+  var preview = document.querySelector(".preview-region");
+
+  if (results.length > 0) {
+    keyboard.setResults(results);
+  } else {
+    autoarea.style.display = "none";
+    preview.style.display = "none";
+  }
+});
+
+ipc.on('keyboard-modify', (evt, args) => {
+  var replaceContent = args[0];
+  var contentbox = document.querySelector(".custom-key")
+
+  contentbox.innerHTML = replaceContent;
+  keyboard.changed();
+});
