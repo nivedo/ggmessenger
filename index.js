@@ -124,9 +124,14 @@ ipc.on('handle-messages', (evt, messages) => {
 	handler.parse(messages);
 });
 
-ipc.on('autocomplete', (evt, args) => {
+ipc.on('process-keyboard', (evt, args) => {
 	var keytype = args[0];
 	var content = args[1];
+	var doreplace = args[2];
 	var results = library.autocomplete(keytype, content);
 	mainWindow.send("autocomplete", results);
+	if(doreplace) {
+		var process = handler.processKeyboard(keytype, content);
+		mainWindow.send("keyboard-modify", [process]);
+	}
 });

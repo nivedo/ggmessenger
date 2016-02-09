@@ -43,6 +43,20 @@ function handleTooltips(raw) {
 	return null;
 }
 
+function processKeyboard(keytype, content) {
+	var p1 = content.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, function(match, $1, $2) {
+		var safeclass = utils.SafeCSSClass($2, $1);
+		var style = library.getstyle(safeclass);
+		return '<a class="tooltip" target="_blank" contenteditable="false" href="' + utils.GetCardURL($2, $1) + '" rel="' + $1 + '" data-preview="' + style + '">' + $2 + '</a> ';
+	});
+	var p2 = p1.replace(/\[([^\[\]]+)\]/g, function(match, $1) {
+		var safeclass = utils.SafeCSSClass($1, keytype);
+		var style = library.getstyle(safeclass);
+		return '<a class="tooltip" target="_blank" contenteditable="false" href="' + utils.GetCardURL($1, keytype) + '" rel="' + keytype + '" data-preview="' + style + '">' + $1 + '</a> ';
+	});
+	return p2;
+}
+
 function parseWithPromises(messages) {
 	var promises = [];
 	var results = [];
@@ -100,4 +114,8 @@ function parseWithPromises(messages) {
 
 exports.parse = (messages) => {
 	parseWithPromises(messages);
+};
+
+exports.processKeyboard = (keytype, content) => {
+	return processKeyboard(keytype, content);
 };

@@ -19,7 +19,8 @@ html {
 }
 
 /* Keyboard */
-/*
+
+
 ._kmc ._5rp7._5rp8 {
   display: none;
 }
@@ -35,16 +36,25 @@ html {
   overflow: hidden;
   font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif !important;
   font-size: 14px;
-  height: 1.25em;
-  padding: 0;
+  height: auto;
+  min-height: 1.3em;
 }
 
 .custom-key:focus {
   outline: none;
 }
-*/
+
 
 /* THEME 2 */
+
+.layerCancel:focus {
+  outline: 0 !important;
+}
+
+._2oc8 {
+  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/fbicons.png") !important;
+}
+
 ._1enh, ._1enh ._1ht1, ._1enh ._5t4c, ._1enh ._5l37 {
   background-color: #224760 !important;
 }
@@ -77,7 +87,7 @@ html {
   font-family: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif !important;
 }
 
-._20bp .tooltip {
+._20bp .tooltip, .custom-key .tooltip {
 	background: transparent;
 	text-decoration: none !important;
 	font-style: normal !important;
