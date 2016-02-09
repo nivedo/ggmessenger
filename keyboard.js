@@ -70,9 +70,17 @@ function CreateCustomKeyboard(default_type) {
         e.preventDefault();
         Send();  
       }
+      if (e.keyCode == '9') {
+        e.preventDefault();
+        var autofirst = document.querySelector(".auto-region ul li a");
+        if (autofirst != undefined) {
+          console.log(autofirst);
+          autofirst.click();
+        }
+      }
     }
     inputbox.onkeyup = function (e) {
-      if (e.keyCode == '13' && !e.shiftKey) { 
+      if ((e.keyCode == '13' && !e.shiftKey) || (e.keyCode == '9')) { 
         return;
       }
       var contentbox = document.getElementById("customkey");
@@ -110,8 +118,6 @@ function CreateAutocomplete(default_type) {
   iconwrap.appendChild(iconbox);
   var autoarea = document.createElement("div");
   autoarea.className = "auto-region";
-  var autoul = document.createElement("ul");
-  autoarea.appendChild(autoul);
   iconwrap.appendChild(autoarea);
   var preview = document.createElement("div");
   preview.className = "preview-region";
@@ -128,8 +134,6 @@ function CreateAutocomplete(default_type) {
 function ClearAuto() {
   var autoarea = document.querySelector(".auto-region");
   autoarea.innerHTML = "";
-  var autoul = document.createElement("ul");
-  autoarea.appendChild(autoul);
 }
 
 function SendMessage(msg) {
