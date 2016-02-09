@@ -102,7 +102,7 @@ function autoComplete(keytype, content) {
 
       if (endpart.length > 1) {
         var opentoken = endpart.pop();
-        opentoken = opentoken.split("::").pop();
+        opentoken = opentoken.split("::").pop().trim();
         var n = content.lastIndexOf(opentoken);
         partial = content.slice(0,n-1);
 

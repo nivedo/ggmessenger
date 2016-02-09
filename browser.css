@@ -434,8 +434,7 @@ html {
   color: #fff;
   content: "";
   /*background-image: attr(data-attr) !important;*/
-  background-color: #000;
-  background-color: hsla(0, 0%, 0%, 0.0);
+  background-color: transparent !important;
   background: inherit;
   background-size: 100%;
   background-repeat: no-repeat;

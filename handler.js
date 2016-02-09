@@ -18,9 +18,13 @@ function handleSticker(raw) {
 	var name = split[1];
   	var safeclass = utils.SafeCSSClass(name, type);
   	var url = utils.GetCardURL(name, type);
-  	var innerHTML = '<a target="_blank" href="' + url + 
-  		'"><div class="sticker ' + safeclass + '" style="' + library.getstyle(safeclass) + '"></div></a>';
-
+  	var style = library.getstyle(safeclass)
+  	if (style == undefined) {
+  		return null;
+  	}
+  	var	innerHTML = '<a target="_blank" href="' + url + 
+  		'"><div class="sticker ' + safeclass + '" style="' + style + '"></div></a>';
+  		
   	return innerHTML;
 }
 
@@ -37,7 +41,11 @@ function handleTooltips(raw) {
 		return raw.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, function(match, $1, $2) {
 			var safeclass = utils.SafeCSSClass($2, $1);
 			var style = library.getstyle(safeclass);
-			return '<a class="tooltip" target="_blank" href="' + utils.GetCardURL($2, $1) + '" rel="' + $1 + '" data-preview="' + style + '">' + $2 + '</a>';
+			if (style != undefined) {
+				return '<a class="tooltip" target="_blank" href="' + utils.GetCardURL($2, $1) + '" rel="' + $1 + '" data-preview="' + style + '">' + $2 + '</a>';
+			} else {
+				return '[' + $1 + "::" + $2 + "]";
+			}
 		});
 	}
 	return null;
@@ -47,12 +55,20 @@ function processKeyboard(keytype, content) {
 	var p1 = content.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, function(match, $1, $2) {
 		var safeclass = utils.SafeCSSClass($2, $1);
 		var style = library.getstyle(safeclass);
-		return '<a class="tooltip" target="_blank" contenteditable="false" href="' + utils.GetCardURL($2, $1) + '" rel="' + $1 + '" data-preview="' + style + '">' + $2 + '</a> ';
+		if (style != undefined) {
+			return '<a class="tooltip" target="_blank" contenteditable="false" href="' + utils.GetCardURL($2, $1) + '" rel="' + $1 + '" data-preview="' + style + '">' + $2 + '</a> ';
+		} else {
+			return '';
+		}
 	});
 	var p2 = p1.replace(/\[([^\[\]]+)\]/g, function(match, $1) {
 		var safeclass = utils.SafeCSSClass($1, keytype);
 		var style = library.getstyle(safeclass);
-		return '<a class="tooltip" target="_blank" contenteditable="false" href="' + utils.GetCardURL($1, keytype) + '" rel="' + keytype + '" data-preview="' + style + '">' + $1 + '</a> ';
+		if (style != undefined) {
+			return '<a class="tooltip" target="_blank" contenteditable="false" href="' + utils.GetCardURL($1, keytype) + '" rel="' + keytype + '" data-preview="' + style + '">' + $1 + '</a> ';
+		} else {
+			return '';
+		}
 	});
 	return p2;
 }
