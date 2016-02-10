@@ -31,7 +31,7 @@ function placeCaretAtEnd(el) {
 
 function OnChange() {
   AlignKeyboard();
-  ClearAuto();
+  ClearAuto(false);
   SetKeyboardTooltips();
   placeCaretAtEnd(document.querySelector(".custom-key"));
 }
@@ -47,7 +47,7 @@ function Send() {
   SendMessage(content);
   document.querySelector(".custom-key").textContent = "";
   AlignKeyboard();
-  ClearAuto();
+  ClearAuto(true);
   placeCaretAtEnd(contentbox);
 }
 
@@ -86,7 +86,7 @@ function CreateCustomKeyboard(default_type) {
       var contentbox = document.getElementById("customkey");
       var content = contentbox.innerHTML.replace(/&nbsp;/g,' ');
       AlignKeyboard();
-      ClearAuto();
+      ClearAuto(false);
       var keytype = document.querySelector(".icon").alt;
       var doReplace = (e.keyCode == '221');
       ipc.send('process-keyboard', [keytype, content, doReplace]);
@@ -131,9 +131,10 @@ function CreateAutocomplete(default_type) {
   //SetPlaceholder();
 }
 
-function ClearAuto() {
+function ClearAuto(hide) {
   var autoarea = document.querySelector(".auto-region");
   autoarea.innerHTML = "";
+  if(hide) autoarea.style.display = "none";
 }
 
 function SendMessage(msg) {
@@ -172,7 +173,7 @@ function InsertCard(keytype, name) {
   contentbox.innerHTML = replace;
 
   AlignKeyboard();
-  ClearAuto();
+  ClearAuto(true);
   ipc.send('process-keyboard', [keytype, contentbox.innerHTML, true]);
 }
 

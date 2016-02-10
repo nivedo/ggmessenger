@@ -43,96 +43,63 @@ function loadHelper(lib, extracss, type) {
 		for( var j = 0; j < sublib.length; j++) {
 			var imgsrc = utils.GetImageURL(bundleId, sublib[j]["id"], ext);
 			var cssstr = extracss + 
-				"background-image:url('" + imgsrc + "') !important;";
+			"background-image:url('" + imgsrc + "') !important;";
 			// Hacky "async" optimization to not lock UI
-	        if (count % 100 == 0) {
-	          	jsfull += "setTimeout(function() {";
-	        	closed = false;
-	     	}
+			if (count % 100 == 0) {
+				jsfull += "setTimeout(function() {";
+				closed = false;
+			}
 			var name = sublib[j]["name"];
 			var words = name.trim().split(' ');
 			var lastword = "";
 			while (words.length > 0) {
 				var word = words.pop();
 				var nextword = word + " " + lastword;
-		        // longer word, or beginning of word, add to trie
-		        if (word.length > 3 || words.length == 0) {
-		        	var jsline = 'trieMap["' + type + '"].add("'+ 
-		        		utils.TrieString(nextword) + 
-		        		'", {name: "' + 
-		        		name.replace(/"/g, '\\"') + 
-		        		'", id: "' + sublib[j]["id"] + '", type: "' + type + '", css: "' + cssstr + '"});';
-					jsfull += jsline;
-		        }
-		        lastword = nextword;
-		    }
-		    if (count % 100 == 99) {
-		        jsfull += "}, " + (count - count % 100) / 2 + ");"
-		        closed = true;
-		    }
+		       // longer word, or beginning of word, add to trie
+		       if (word.length > 3 || words.length == 0) {
+		       	var jsline = 'trieMap["' + type + '"].add("'+ 
+		       		utils.TrieString(nextword) + 
+		       		'", {name: "' + 
+		       		name.replace(/"/g, '\\"') + 
+		       		'", id: "' + sublib[j]["id"] + '", type: "' + type + '", css: "' + cssstr + '"});';
+						jsfull += jsline;
+					}
+				lastword = nextword;
+			}
+			if (count % 100 == 99) {
+				jsfull += "}, " + (count - count % 100) / 2 + ");"
+				closed = true;
+			}
 			styleMap[utils.SafeCSSClass(name, type)] = cssstr;
 			count++;
 		}
 	}
 	if (!closed) {
-	    jsfull += "}, " + (i - i % 100) + ");"
+		jsfull += "}, " + (i - i % 100) + ");"
 	}
 	eval(jsfull);
 }
 
 function autoComplete(keytype, content) {
 	var results = [];
-	var partial = '';
 
 	if (content.length == 0) return results;
 
-	if (content.charAt(0) == "@") {
-      var searchstr = utils.TrieString(content.substring(1));
-      var fullres = trieMap[keytype].find(searchstr);
-      if (fullres != undefined) {
-        for(var k = 0; k < fullres.length; k++) {
-          if (fullres[k].type == keytype) {
-            results = results.concat(fullres[k]);
-          }
-        }
-      }
-    } else {
-      var lasttoken = content.trim().split(']').pop();
-      var endpart = lasttoken.trim().split('[');
-      
-      if (endpart.length > 1) {
-        var opentoken = endpart.pop();
-        opentoken = opentoken.split("::").pop();
-        var n = content.lastIndexOf(opentoken);
-        partial = content.slice(0,n-1);
+	var lasttoken = content.trim().split(']').pop();
+	var endpart = lasttoken.trim().split('[');
 
-        var words = opentoken.trim().split(' ');
-        var lastword = utils.TrieString(words.pop());
-        if (lastword.length > 0) {
-          var queries = [lastword];
-          
-          var depth = 4;
-          for(var j = depth; j > 0 && words.length > 0; j--) {
-            var nextword = utils.TrieString(words.pop()) + "_" + lastword;
-            queries = queries.concat(nextword);
-            lastword = nextword;
-          }
-          
-          for(var j = queries.length-1; j >= 0; j--) {
-            var partialres = trieMap[keytype].find(queries[j]);
-            if (partialres != undefined) {
-              for(var k = 0; k < partialres.length; k++) {
-                if (partialres[k].type == keytype) {
-                  results = results.concat(partialres[k]);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+	if (endpart.length > 1) {
+		var opentoken = endpart.pop();
+		opentoken = opentoken.split("::").pop();
 
-    return results;
+		var autoword = opentoken.trim().split(' ').join('_');
+		var qres = trieMap[keytype].find(autoword);
+		if (qres != undefined) {
+			results = results.concat(qres);
+		}
+	}
+
+	return results;
 }
 
 /* Exports */

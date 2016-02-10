@@ -20,7 +20,7 @@ exports.SafeCSSClass = (name, type) => {
 exports.NormString = str => {
   return str.trim().replace(/[^a-z0-9]/g, function(s) {
     var c = s.charCodeAt(0);
-    if (c == 198) return "ae";
+    if (c == 198 || c == 230) return "ae";
     if (c == 91 || c == 93) return ''; // remove [] brackets
     if (c >= 65 && c <= 90) return s.toLowerCase(); // convert upper to lowercase
     return '-' // everything else becomes dash
