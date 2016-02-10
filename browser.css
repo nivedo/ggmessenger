@@ -52,7 +52,7 @@ html {
 }
 
 ._2oc8 {
-  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/fbicons.png") !important;
+  background-image: url("https://d1fyt5lxvxva06.cloudfront.net/assets/fbicons.png") !important;
 }
 
 ._1enh, ._1enh ._1ht1, ._1enh ._5t4c, ._1enh ._5l37 {
@@ -257,12 +257,12 @@ html {
 }
 
 .icon.mtg {
-  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/mtg_icon.png");
+  background-image: url("https://d1fyt5lxvxva06.cloudfront.net/assets/mtg_icon.png");
   background-size: 60%;
 }
 
 .icon.hs {
-  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/hearthstone_icon.png");
+  background-image: url("https://d1fyt5lxvxva06.cloudfront.net/assets/hearthstone_icon.png");
   background-size: 80%;
 }
 
@@ -278,12 +278,12 @@ html {
 }
 
 .inline-icon.mtg {
-  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/mtg_icon.png");
+  background-image: url("https://d1fyt5lxvxva06.cloudfront.net/assets/mtg_icon.png");
   background-size: 80%;
 }
 
 .inline-icon.hs {
-  background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/hearthstone_icon.png");
+  background-image: url("https://d1fyt5lxvxva06.cloudfront.net/assets/hearthstone_icon.png");
   background-size: 100%;
 }
 

@@ -74,7 +74,6 @@ function CreateCustomKeyboard(default_type) {
         e.preventDefault();
         var autofirst = document.querySelector(".auto-region ul li a");
         if (autofirst != undefined) {
-          console.log(autofirst);
           autofirst.click();
         }
       }

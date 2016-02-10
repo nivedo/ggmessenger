@@ -81,7 +81,7 @@ app.on('ready', () => {
 	const page = mainWindow.webContents;
 
 	/* TODO: switch library load to read from config file */
-	library.load('https://d1fyt5lxvxva06.cloudfront.net/config/mtg_en_v4.json','height:328px;width:230px;','mtg');
+	library.load('https://d1fyt5lxvxva06.cloudfront.net/config/mtg_en_v5.json','height:328px;width:230px;','mtg');
 	library.load('https://d1fyt5lxvxva06.cloudfront.net/config/hearthstone_en.json','height:348px;width:230px;','hs');
 
 	page.on('dom-ready', () => {
