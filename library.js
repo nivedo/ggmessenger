@@ -92,7 +92,7 @@ function autoComplete(keytype, content) {
 		var opentoken = endpart.pop();
 		opentoken = opentoken.split("::").pop();
 
-		var autoword = opentoken.trim().split(' ').join('_');
+		var autoword = utils.TrieString(opentoken.trim());
 		var qres = trieMap[keytype].find(autoword);
 		if (qres != undefined) {
 			results = results.concat(qres);
