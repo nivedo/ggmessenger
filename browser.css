@@ -387,7 +387,7 @@ html {
 }
 
 .auto-region ul li:first-of-type a:after {
-  content: "(Tab insert)";
+  content: "(Tab to insert)";
   float: right;
   text-align: right;
   margin-right: 20px;

@@ -138,10 +138,10 @@ function ClearAuto() {
 
 function SendMessage(msg) {
   if (msg.length == 0) return;
-  var textbox = document.querySelector("._45m_._2vxa");
+  var textbox = document.querySelector("._kmc");
 
   /* MAGIC: send a facebook "sticker" */
-  var tmp = textbox[Object.getOwnPropertyNames(textbox)[0]]._currentElement._owner._currentElement._owner._currentElement._owner._currentElement._owner._instance;
+  var tmp = textbox[Object.getOwnPropertyNames(textbox)[0]]._currentElement._owner._instance;
   tmp.props.onMessageSend(msg)
   tmp._typingDetector.resetState();
   tmp._resetState(function() {
