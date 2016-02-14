@@ -82,7 +82,7 @@ app.on('ready', () => {
 
 	/* TODO: switch library load to read from config file */
 	library.load('https://d1fyt5lxvxva06.cloudfront.net/config/mtg_en_v5.json','height:328px;width:230px;','mtg');
-	library.load('https://d1fyt5lxvxva06.cloudfront.net/config/hearthstone_en.json','height:348px;width:230px;','hs');
+	library.load('https://d1fyt5lxvxva06.cloudfront.net/config/hearthstone_en_v2.json','height:348px;width:230px;','hs');
 
 	page.on('dom-ready', () => {
 		page.insertCSS(fs.readFileSync(path.join(__dirname, 'browser.css'), 'utf8'));

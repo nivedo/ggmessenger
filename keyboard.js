@@ -9,6 +9,9 @@ function AlignKeyboard() {
   var keycontents = document.querySelector("._4rv3");
   var topheight = outerwrap.offsetHeight - keycontents.offsetHeight;
   topwrap.style.height = topheight + "px";
+  if(document.getElementById("customkey").textContent == "") {
+    document.getElementById("placeholder").style.visibility = "visible";
+  }
 }
 
 function placeCaretAtEnd(el) {
@@ -33,11 +36,11 @@ function OnChange() {
   AlignKeyboard();
   ClearAuto(false);
   SetKeyboardTooltips();
-  placeCaretAtEnd(document.querySelector(".custom-key"));
+  placeCaretAtEnd(document.getElementById("customkey"));
 }
 
 function Send() {
-  var contentbox = document.querySelector(".custom-key");
+  var contentbox = document.getElementById("customkey");
   var tooltips = contentbox.querySelectorAll(".tooltip");
   for(var i = 0; i < tooltips.length; i++) {
     tooltips[i].innerHTML = "[" + tooltips[i].getAttribute("rel") + "::" + tooltips[i].innerHTML + "]";
@@ -45,7 +48,7 @@ function Send() {
   }
   var content = contentbox.textContent;
   SendMessage(content);
-  document.querySelector(".custom-key").textContent = "";
+  contentbox.textContent = "";
   AlignKeyboard();
   ClearAuto(true);
   placeCaretAtEnd(contentbox);
@@ -53,45 +56,64 @@ function Send() {
 
 function CreateCustomKeyboard(default_type) {
   var inputbox = document.querySelector("._5irm ._kmc");
-  if (inputbox.querySelector(".custom-key") == undefined) {
-    var newbox = document.createElement("div");
-    newbox.className = "custom-key";
-    newbox.id = "customkey";
-    newbox.setAttribute("contenteditable", true);
+  if (document.getElementById("customkey") == undefined) {
+    var keycontainer = document.createElement("div");
+    keycontainer.id = "keywrap";
+    keycontainer.onclick = function() {
+      document.getElementById("customkey").focus();
+    }
+
+    var placebox = document.createElement("div");
+    placebox.id = "placeholder";
+    placebox.innerHTML = "Type a message, or link a card with [cardname]...";
+    keycontainer.appendChild(placebox);
+
+    var keybox = document.createElement("div");
+    keybox.id = "customkey";
+    keybox.setAttribute("contenteditable", true);
     // Copy paste should be text only.
-    newbox.addEventListener("paste", function(e) {
+    keybox.addEventListener("paste", function(e) {
       e.preventDefault();
       var text = e.clipboardData.getData("text/plain");
       document.execCommand("insertHTML", false, text);
     });
-    //newbox.innerHTML = "Type a message, or link a card with @cardname...";
-    inputbox.onkeydown = function(e) {
+    keybox.onkeypress = function(e) {
+      document.getElementById("placeholder").style.visibility = "hidden";
+    }
+    keybox.onkeydown = function(e) {
       if (e.keyCode == '13' && !e.shiftKey) {
         e.preventDefault();
         Send();  
       }
       if (e.keyCode == '9') {
         e.preventDefault();
-        var autofirst = document.querySelector(".auto-region ul li a");
-        if (autofirst != undefined) {
-          autofirst.click();
+        var selected = document.querySelector(".auto-region ul li.selected a");
+        if (selected != undefined) {
+          selected.click();
         }
       }
+      // UP
+      if (e.keyCode == '38') {
+        SelectPrevAuto();
+      }
+      // DOWN
+      if (e.keyCode == '40') {
+        SelectNextAuto();
+      }
     }
-    inputbox.onkeyup = function (e) {
-      if ((e.keyCode == '13' && !e.shiftKey) || (e.keyCode == '9')) { 
+    keybox.onkeyup = function (e) {
+      if ((e.keyCode == '13' && !e.shiftKey) || (e.keyCode == '9') || (e.keyCode == '38') || (e.keyCode == '40')) { 
         return;
       }
-      var contentbox = document.getElementById("customkey");
-      var content = contentbox.innerHTML.replace(/&nbsp;/g,' ');
+      var content = this.innerHTML.replace(/&nbsp;/g,' ');
       AlignKeyboard();
       ClearAuto(false);
-      var keytype = document.querySelector(".icon").alt;
       var doReplace = (e.keyCode == '221');
-      ipc.send('process-keyboard', [keytype, content, doReplace]);
+      ipc.send('process-keyboard', [GetKeyType(), content, doReplace]);
     };
-    //autosize(newbox);
-    inputbox.appendChild(newbox);
+    keycontainer.appendChild(keybox);
+
+    inputbox.appendChild(keycontainer);
   }
 }
 
@@ -165,7 +187,7 @@ function SetKeyboardTooltips() {
 }
 
 function InsertCard(keytype, name) {
-  var contentbox = document.querySelector(".custom-key");
+  var contentbox = document.getElementById("customkey");
   var content = contentbox.innerHTML;
   var prefix = content.substring(0, content.lastIndexOf("["));
   var replace = prefix + "[" + keytype + "::" + name + "]";
@@ -190,8 +212,38 @@ function ClearKeyboardPreview() {
   preview.style.cssText = "";
 }
 
+function GetKeyType() {
+  return document.querySelector(".icon").alt;
+}
+
+function SelectPrevAuto() {
+  var selected = document.querySelector(".selected");
+  if (selected != undefined) {
+    var prev = selected.previousSibling;
+    if (prev != undefined) {
+      prev.className = "selected";
+      selected.className = "";
+      SetKeyboardPreview(GetKeyType(), prev.firstChild.textContent, prev.firstChild.getAttribute("style-preview") + "top: -490px !important;")
+      prev.scrollIntoView(false);
+    }
+  }
+}
+
+function SelectNextAuto() {
+  var selected = document.querySelector(".selected");
+  if (selected != undefined) {
+    var next = selected.nextSibling;
+    if (next != undefined) {
+      next.className = "selected";
+      selected.className = "";
+      SetKeyboardPreview(GetKeyType(), next.firstChild.textContent, next.firstChild.getAttribute("style-preview") + "top: -490px !important;")
+      next.scrollIntoView(false);
+    }
+  }
+}
+
 function SetAutocomplete(results, partial) {
-  var keytype = document.querySelector(".icon").alt;
+  var keytype = GetKeyType();
   var autoarea = document.querySelector(".auto-region");
   autoarea.alt = partial;
   var preview = document.querySelector(".preview-region");
@@ -211,14 +263,22 @@ function SetAutocomplete(results, partial) {
         SetKeyboardPreview(keytype, this.textContent, this.getAttribute("style-preview") + "top: -490px !important;");
       };
       link.onmouseout = function() {
-        ClearKeyboardPreview();
+        var selected = document.querySelector(".selected");
+        if (selected != undefined) {
+          SetKeyboardPreview(keytype, selected.firstChild.textContent, selected.firstChild.getAttribute("style-preview") + "top: -490px !important;")
+        } else {
+          ClearKeyboardPreview();
+        }
       };
-      
       link.onclick = function() {
         var partial = document.querySelector(".auto-region").alt;
         InsertCard(keytype, this.textContent);
         ClearKeyboardPreview();
       };
+      if(noresults) {
+        li.className = "selected";
+        SetKeyboardPreview(keytype, link.textContent, link.getAttribute("style-preview") + "top: -490px !important;");
+      }
       li.appendChild(link);
       autoul.appendChild(li);
       noresults = false;
@@ -233,29 +293,8 @@ function SetAutocomplete(results, partial) {
   autoarea.appendChild(autoul);
 }
 
-function SetPlaceholder() {
-  var placeElem = document.querySelector("._1p1t ._1p1v");
-  if(placeElem && placeElem.className.indexOf("show") == -1) {
-    placeElem.innerHTML = "Type a message, or link a card with @cardname...";
-    placeElem.className += " show";
-  }
-}
-
 function SetKeyboardType(keytype) {
   document.querySelector(".icon").alt = keytype;
-}
-
-function SetKeyboardEvents() {
-  document.onkeyup = function (e) {
-    ClearAuto();
-    var textbox = document.querySelector("._45m_._2vxa");
-    var content = textbox.firstChild.firstChild.textContent;
-    var keytype = document.querySelector(".icon").alt;
-
-    ipc.send('autocomplete', [keytype, content]);
-
-    if(content.length == 0) SetPlaceholder();
-  };
 }
 
 /* Exports */

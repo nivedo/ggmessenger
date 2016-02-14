@@ -50,6 +50,7 @@ function loadHelper(lib, extracss, type) {
 				closed = false;
 			}
 			var name = sublib[j]["name"];
+			
 			var words = name.trim().split(' ');
 			var lastword = "";
 			while (words.length > 0) {

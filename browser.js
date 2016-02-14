@@ -252,7 +252,7 @@ ipc.on('autocomplete', (evt, results) => {
 
 ipc.on('keyboard-modify', (evt, args) => {
   var replaceContent = args[0];
-  var contentbox = document.querySelector(".custom-key")
+  var contentbox = document.getElementById("customkey")
 
   contentbox.innerHTML = replaceContent;
   keyboard.changed();
