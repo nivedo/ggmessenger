@@ -3,15 +3,52 @@ const utils = require('./utils');
 const autosize = require('autosize');
 const ipc = require('electron').ipcRenderer;
 
+var s_type = []
+var s_content = [];
+
+function SaveThreadContent(threadid) {
+  s_content[threadid] = document.getElementById("customkey").innerHTML;
+}
+
+function GetThreadContent(threadid) {
+  if (threadid in s_content) {
+    return s_content[threadid];
+  }
+  return "";
+}
+
+function SaveThreadType(threadid) {
+  s_type[threadid] = GetKeyType();
+}
+
+function GetThreadType(threadid) {
+  if (threadid in s_type) {
+    return s_type[threadid];
+  }
+  return "mtg";
+}
+
+function OnSwitchThread() {
+  var threadid = GetThreadID();
+  SetKeyboardType(GetThreadType(threadid));
+  document.getElementById("customkey").innerHTML = GetThreadContent(threadid);
+  AlignKeyboard();
+}
+
 function AlignKeyboard() {
   var outerwrap = document.querySelector("._2xhi");
   var topwrap = document.querySelector("._4u-c._1wfr");
   var keycontents = document.querySelector("._4rv3");
   var topheight = outerwrap.offsetHeight - keycontents.offsetHeight;
-  topwrap.style.height = topheight + "px";
+  if (topwrap != undefined) {
+    topwrap.style.height = topheight + "px";
+  }
   if(document.getElementById("customkey").textContent == "") {
     document.getElementById("placeholder").style.visibility = "visible";
+  } else {
+    document.getElementById("placeholder").style.visibility = "hidden";
   }
+  SaveThreadContent(GetThreadID());
 }
 
 function placeCaretAtEnd(el) {
@@ -40,13 +77,19 @@ function OnChange() {
 }
 
 function Send() {
+  var content;
   var contentbox = document.getElementById("customkey");
-  var tooltips = contentbox.querySelectorAll(".tooltip");
-  for(var i = 0; i < tooltips.length; i++) {
-    tooltips[i].innerHTML = "[" + tooltips[i].getAttribute("rel") + "::" + tooltips[i].innerHTML + "]";
-    tooltips[i].innerHTML = tooltips[i].innerHTML.toLowerCase();
+  var selected = document.querySelector(".auto-region ul li.selected a");
+  if(selected != undefined) {
+    content = "[" + GetKeyType() + "::" + selected.textContent + "]";
+  } else {
+    var tooltips = contentbox.querySelectorAll(".tooltip");
+    for(var i = 0; i < tooltips.length; i++) {
+      tooltips[i].innerHTML = "[" + tooltips[i].getAttribute("rel") + "::" + tooltips[i].innerHTML + "]";
+      tooltips[i].innerHTML = tooltips[i].innerHTML.toLowerCase();
+    }
+    content = contentbox.textContent;
   }
-  var content = contentbox.textContent;
   SendMessage(content);
   contentbox.textContent = "";
   AlignKeyboard();
@@ -94,15 +137,22 @@ function CreateCustomKeyboard(default_type) {
       }
       // UP
       if (e.keyCode == '38') {
+        e.preventDefault();
         SelectPrevAuto();
       }
       // DOWN
       if (e.keyCode == '40') {
+        e.preventDefault();
         SelectNextAuto();
       }
     }
     keybox.onkeyup = function (e) {
-      if ((e.keyCode == '13' && !e.shiftKey) || (e.keyCode == '9') || (e.keyCode == '38') || (e.keyCode == '40')) { 
+      if ((e.keyCode == '13' && !e.shiftKey) || 
+        e.keyCode == '9' || 
+        e.keyCode == '37' || 
+        e.keyCode == '38' || 
+        e.keyCode == '39' || 
+        e.keyCode == '40') { 
         return;
       }
       var content = this.innerHTML.replace(/&nbsp;/g,' ');
@@ -134,6 +184,7 @@ function CreateAutocomplete(default_type) {
       this.className = "icon mtg";
       this.alt = "mtg";
     }
+    SaveThreadType(GetThreadID());
   }
 
   iconwrap.appendChild(iconbox);
@@ -155,7 +206,15 @@ function CreateAutocomplete(default_type) {
 function ClearAuto(hide) {
   var autoarea = document.querySelector(".auto-region");
   autoarea.innerHTML = "";
-  if(hide) autoarea.style.display = "none";
+  if(hide) {
+    autoarea.style.display = "none";
+    ClearKeyboardPreview();
+  }
+}
+
+function GetThreadID() {
+  var textbox = document.querySelector("._kmc");
+  return textbox[Object.getOwnPropertyNames(textbox)[0]]._currentElement._owner._instance.props.threadID;
 }
 
 function SendMessage(msg) {
@@ -294,7 +353,9 @@ function SetAutocomplete(results, partial) {
 }
 
 function SetKeyboardType(keytype) {
-  document.querySelector(".icon").alt = keytype;
+  var icon = document.querySelector(".icon")
+  icon.alt = keytype;
+  icon.className = "icon " + keytype;
 }
 
 /* Exports */
@@ -302,6 +363,7 @@ function SetKeyboardType(keytype) {
 exports.init = (default_type) => {
   CreateAutocomplete(default_type);
   CreateCustomKeyboard(default_type);
+  OnSwitchThread();
 }
 
 exports.setResults = (results) => {
