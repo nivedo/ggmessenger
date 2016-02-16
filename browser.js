@@ -213,6 +213,9 @@ ipc.on('message-callback', (evt,results) => {
 			refNode.parentNode.insertBefore(clone, refNode);
 			elem.parentNode.style.cssText = 'border: 1px solid #ddd; background-color:transparent !important';
 		}
+		if (type == "special") {
+			elem.parentNode.style.cssText = 'border: 1px solid #ddd; background-color:transparent !important';
+		}
 		if (replaceContent != null) {
 			elem.innerHTML = replaceContent;
 		}
