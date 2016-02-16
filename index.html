@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ggmessenger by nivedo</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Ggmessenger</h1>
+        <p>An unofficial Facebook Messenger for Magic and Hearthstone addicts.</p>
+
+        <p class="view"><a href="https://github.com/nivedo/ggmessenger">View the Project on GitHub <small>nivedo/ggmessenger</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/nivedo/ggmessenger/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/nivedo/ggmessenger/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/nivedo/ggmessenger">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="ggmessenger" class="anchor" href="#ggmessenger" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><img src="media/Icon.png" width="45" align="left"> GGMessenger</h1>
+
+<blockquote>
+<p>An unofficial Facebook Messenger for Magic &amp; Hearthstone addicts.</p>
+</blockquote>
+
+<p>Based on <a href="https://github.com/sindresorhus/caprine/releases/latest"><em>Caprine</em></a> by Sindre Sorhus.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>GGMessenger currently supports both OSX and Windows.</p>
+
+<p>NOTE: Your computer must have access to MTG / Hearthstone sites to support integrations.  Firewalls will prevent integrations from working.</p>
+
+<ul>
+<li><a href="https://www.dropbox.com/s/o0r8pty6shubwqb/GGMessenger-osx-0.4.0.zip?dl=0">OSX 10.9+ Zip</a></li>
+<li><a href="https://www.dropbox.com/s/d8kwqkukferm0xj/GGMessenger-v0.4.0.exe?dl=0">Windows 7+ Installer</a></li>
+</ul>
+
+<p><a href="https://github.com/sindresorhus/caprine/releases/latest"><img src="media/screen3.png" alt=""></a></p>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h2>
+
+<h3>
+<a id="card-linking" class="anchor" href="#card-linking" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Card Linking</h3>
+
+<p>Link <em>any</em> card from MTG or Hearthstone by sending <code>[cardname]</code>, or you can inline cards with tooltips:</p>
+
+<pre><code>I heard they were reprinting [Force of Will] and [Wasteland] in EMA!
+</code></pre>
+
+<p>GGMessenger supports both tab / click autocomplete for all cards.  To switch the autocomplete, simply click the icon left of the keyboard.</p>
+
+<h3>
+<a id="easily-share-deck-lists" class="anchor" href="#easily-share-deck-lists" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Easily Share Deck Lists</h3>
+
+<p>You can share your current draft deck from MTGO by simply exporting it as a DEK file, and drag-and-drop into the chat window!</p>
+
+<p>GGMessenger also automatically expands decks from many external URLs.  Currently, it supports:</p>
+
+<h6>
+<a id="mtg" class="anchor" href="#mtg" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MTG</h6>
+
+<ul>
+<li><a href="http://tappedout.net">TappedOut.net</a></li>
+<li><a href="http://mtgtop8.com">MTGTop8</a></li>
+<li><a href="http://mtggoldfish.com">MTGGoldfish</a></li>
+<li><a href="http://mtgsalvation.com">MTGSalvation</a></li>
+<li><a href="http://channelfireball.com">Channel Fireball</a></li>
+</ul>
+
+<h6>
+<a id="hearthstone" class="anchor" href="#hearthstone" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Hearthstone</h6>
+
+<ul>
+<li><a href="http://hearthpwn.com">HearthPwn</a></li>
+<li><a href="http://hearthhead.com">HearthHead</a></li>
+</ul>
+
+<h2>
+<a id="screenshots" class="anchor" href="#screenshots" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Screenshots</h2>
+
+<p><img src="media/screen1.png" alt="">
+<img src="media/screen2.png" alt=""></p>
+
+<h2>
+<a id="dev" class="anchor" href="#dev" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Dev</h2>
+
+<p>Built with <a href="http://electron.atom.io">Electron</a>.</p>
+
+<h6>
+<a id="commands" class="anchor" href="#commands" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Commands</h6>
+
+<ul>
+<li>Init: <code>$ npm install</code>
+</li>
+<li>Run: <code>$ npm start</code>
+</li>
+<li>Build OS X: <code>$ npm run build-osx</code>
+</li>
+<li>Build Linux: <code>$ npm run build-linux</code>
+</li>
+<li>Build Windows: <code>$ npm run build-windows</code>
+</li>
+<li>Build all: <code>$ brew install wine</code> and <code>$ npm run build</code> <em>(OS X only)</em>
+</li>
+</ul>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>MIT © <a href="https://github.com/jayxni">Jay Ni</a></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/nivedo">nivedo</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
