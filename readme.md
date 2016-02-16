@@ -33,8 +33,6 @@ You can share your current draft deck from MTGO by simply exporting it as a DEK 
 
 GGMessenger also automatically expands decks from many external URLs.  Currently, it supports:
 
-![](media/screen7.png)
-
 ###### MTG
 * [TappedOut.net](http://tappedout.net)
 * [MTGTop8](http://mtgtop8.com)
@@ -46,6 +44,7 @@ GGMessenger also automatically expands decks from many external URLs.  Currently
 * [HearthPwn](http://hearthpwn.com)
 * [HearthHead](http://hearthhead.com)
 
+![](media/screen7.png)
 
 NOTE: Your computer must have access to MTG / Hearthstone sites to support integrations.  Firewalls will prevent integrations from working.
 
