@@ -1,7 +1,7 @@
 {
   "name": "ggmessenger",
   "productName": "GGMessenger",
-  "version": "0.4.0",
+  "version": "0.6.0",
   "description": "Unofficial Facebook Messenger for Gamers",
   "license": "MIT",
   "repository": "nivedo/ggmessenger",

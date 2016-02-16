@@ -1,6 +1,6 @@
 # <img src="media/Icon.png" width="45" align="left">&nbsp;GGMessenger
 
-> An unofficial Facebook Messenger for Magic & Hearthstone addicts.
+> An unofficial Facebook Messenger for Magic & Hearthstone fans.
 
 Based on [*Caprine*](https://github.com/sindresorhus/caprine/releases/latest) by Sindre Sorhus.
 
@@ -8,12 +8,10 @@ Based on [*Caprine*](https://github.com/sindresorhus/caprine/releases/latest) by
 
 GGMessenger currently supports both OSX and Windows.
 
-NOTE: Your computer must have access to MTG / Hearthstone sites to support integrations.  Firewalls will prevent integrations from working.
-
 * [OSX 10.9+ Zip](https://www.dropbox.com/s/o0r8pty6shubwqb/GGMessenger-osx-0.4.0.zip?dl=0)
 * [Windows 7+ Installer](https://www.dropbox.com/s/d8kwqkukferm0xj/GGMessenger-v0.4.0.exe?dl=0)
 
-![](media/screen3.png)
+![](media/screen5.png)
 
 ## Features
 
@@ -27,11 +25,15 @@ I heard they were reprinting [Force of Will] and [Wasteland] in EMA!
 
 GGMessenger supports both tab / click autocomplete for all cards.  To switch the autocomplete, simply click the icon left of the keyboard.
 
+![](media/screen6.png)
+
 ### Easily Share Deck Lists
 
 You can share your current draft deck from MTGO by simply exporting it as a DEK file, and drag-and-drop into the chat window!
 
 GGMessenger also automatically expands decks from many external URLs.  Currently, it supports:
+
+![](media/screen7.png)
 
 ###### MTG
 * [TappedOut.net](http://tappedout.net)
@@ -44,10 +46,8 @@ GGMessenger also automatically expands decks from many external URLs.  Currently
 * [HearthPwn](http://hearthpwn.com)
 * [HearthHead](http://hearthhead.com)
 
-## Screenshots
 
-![](media/screen1.png)
-![](media/screen2.png)
+NOTE: Your computer must have access to MTG / Hearthstone sites to support integrations.  Firewalls will prevent integrations from working.
 
 ## Dev
 

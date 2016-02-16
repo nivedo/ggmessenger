@@ -140,6 +140,7 @@ function CreateCustomKeyboard(default_type) {
     // Copy paste should be text only.
     keybox.addEventListener("paste", function(e) {
       e.preventDefault();
+      document.getElementById("placeholder").style.visibility = "hidden";
       var text = e.clipboardData.getData("text/plain");
       document.execCommand("insertHTML", false, text);
     });
@@ -195,6 +196,7 @@ function CreateCustomKeyboard(default_type) {
   }
 
   ClearAuto(true);
+  window.dispatchEvent(new Event('resize'));
 }
 
 function CreateAutocomplete(default_type) {
