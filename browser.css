@@ -115,9 +115,6 @@ html {
 }
 
 ._nd_ ._hh7 {
-  /*
-  background-color: #cfd8dc !important;
-  */
   background-color: #F5FAFA !important;
   color: #141823 !important;
 }
@@ -138,8 +135,7 @@ html {
 	width: 230px;
   height: 20px;
   border-radius: 8px;
-  content: "???";
-	/*background-image: url("https://s3-us-west-1.amazonaws.com/ggchat/assets/missing.jpg");*/
+  content: "";
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center;
@@ -362,10 +358,6 @@ html {
   left: -2px;
   z-index: 99;
   background: rgba(255,255,255,0.95);
-  /*
-  border-radius: 6px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 10px rgba(0, 0, 0, .35);
-  */
   border: 1px solid rgba(0,0,0,0.1);
   overflow: hidden;
   overflow-y: scroll;
@@ -457,7 +449,6 @@ html {
   border-radius: 8px;
   color: #fff;
   content: "";
-  /*background-image: attr(data-attr) !important;*/
   background-color: transparent !important;
   background: inherit;
   background-size: 100%;
@@ -467,11 +458,6 @@ html {
   font-size: 14px;
   line-height: 1.2;
   overflow: visible;
-  /*
-  -moz-box-shadow:5px 5px 5px rgba(0,0,0,0.3);
-	-webkit-box-shadow:5px 5px 5px rgba(0,0,0,0.3);
-	box-shadow:5px 5px 5px rgba(0,0,0,0.3);
-  */
 }
 
 .tooltip.right:before {

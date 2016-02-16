@@ -1,6 +1,7 @@
 'use strict';
 const utils = require('./utils');
 const autosize = require('autosize');
+const path = require('path');
 const ipc = require('electron').ipcRenderer;
 
 var s_type = []
@@ -80,16 +81,14 @@ function Send() {
   var content;
   var contentbox = document.getElementById("customkey");
   var selected = document.querySelector(".auto-region ul li.selected a");
-  if(selected != undefined) {
-    content = "[" + GetKeyType() + "::" + selected.textContent + "]";
-  } else {
-    var tooltips = contentbox.querySelectorAll(".tooltip");
-    for(var i = 0; i < tooltips.length; i++) {
-      tooltips[i].innerHTML = "[" + tooltips[i].getAttribute("rel") + "::" + tooltips[i].innerHTML + "]";
-      tooltips[i].innerHTML = tooltips[i].innerHTML.toLowerCase();
-    }
-    content = contentbox.textContent;
+
+  var tooltips = contentbox.querySelectorAll(".tooltip");
+  for(var i = 0; i < tooltips.length; i++) {
+    tooltips[i].innerHTML = "[" + tooltips[i].getAttribute("rel") + "::" + tooltips[i].innerHTML + "]";
+    tooltips[i].innerHTML = tooltips[i].innerHTML.toLowerCase();
   }
+  content = contentbox.textContent;
+
   SendMessage(content);
   contentbox.textContent = "";
   AlignKeyboard();
@@ -97,7 +96,28 @@ function Send() {
   placeCaretAtEnd(contentbox);
 }
 
+function InitFileHandler() {
+  var droparea = document.querySelector("._4_j4");
+  droparea.ondragover = function () {
+    return false;
+  };
+  droparea.ondragleave = document.ondragend = function () {
+    return false;
+  };
+  droparea.ondrop = function (e) {
+    var file = e.dataTransfer.files[0];
+    if(path.extname(file.path).toLowerCase() == ".dek") {
+      e.preventDefault();
+      e.stopPropagation();
+      ipc.send('handle-file', [file.path]);
+    }
+    return false;
+  };
+}
+
 function CreateCustomKeyboard(default_type) {
+  InitFileHandler();
+
   var inputbox = document.querySelector("._5irm ._kmc");
   if (document.getElementById("customkey") == undefined) {
     var keycontainer = document.createElement("div");
@@ -126,7 +146,12 @@ function CreateCustomKeyboard(default_type) {
     keybox.onkeydown = function(e) {
       if (e.keyCode == '13' && !e.shiftKey) {
         e.preventDefault();
-        Send();  
+        var selected = document.querySelector(".auto-region ul li.selected a");
+        if (selected != undefined) {
+          selected.click();
+        } else { 
+          Send();
+        }
       }
       if (e.keyCode == '9') {
         e.preventDefault();
@@ -198,9 +223,6 @@ function CreateAutocomplete(default_type) {
   if (parent.firstChild.className.split(' ')[0] != "key-icon") {
     inputbox.parentNode.insertBefore(iconwrap, inputbox);
   }
-
-  //SetKeyboardEvents();
-  //SetPlaceholder();
 }
 
 function ClearAuto(hide) {
@@ -368,6 +390,10 @@ exports.init = (default_type) => {
 
 exports.setResults = (results) => {
   SetAutocomplete(results, '');
+}
+
+exports.sendMessage = (message) => {
+  SendMessage(message);
 }
 
 exports.changed = () => {

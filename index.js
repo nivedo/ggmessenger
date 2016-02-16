@@ -60,10 +60,13 @@ function createMainWindow() {
 	win.loadURL('https://www.messenger.com/login/');
 
 	win.on('close', e => {
+		app.quit();
+		/*
 		if (!isQuitting) {
 			e.preventDefault();
 			win.hide();
 		}
+		*/
 	});
 
 	win.on('page-title-updated', (e, title) => updateBadge(title));
@@ -76,7 +79,7 @@ app.on('ready', () => {
 
 	mainWindow = createMainWindow();
 
-	createTray(mainWindow);
+	//createTray(mainWindow);
 
 	const page = mainWindow.webContents;
 
@@ -122,6 +125,13 @@ ipc.on('notification-click', () => {
 
 ipc.on('handle-messages', (evt, messages) => {
 	handler.parse(messages);
+});
+
+ipc.on('handle-file', (evt, args) => {
+	var result = handler.parseFile(args[0]);
+	if (result != null) {
+		mainWindow.send("send-message", [result]);
+	}
 });
 
 ipc.on('process-keyboard', (evt, args) => {

@@ -234,6 +234,10 @@ ipc.on('create-keyboard', (evt, args) => {
 	keyboard.init(args[0]);
 });
 
+ipc.on('send-message', (evt, args) => {
+	keyboard.sendMessage(args[0]);
+});
+
 ipc.on('set-splash', () => {
 	SetTitle();
 });

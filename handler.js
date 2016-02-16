@@ -6,6 +6,7 @@ const utils = require('./utils');
 const library = require('./library');
 const cheerio = require("cheerio");
 const scraper = require("./scraper");
+const filehandler = require("./filehandler");
 const BrowserWindow = electron.BrowserWindow;
 
 function handleSticker(raw) {
@@ -32,6 +33,35 @@ function handleURL(raw) {
 	if(raw.indexOf('</a>') > 0) {
 		var $ = cheerio.load(raw);
 		return $("a").text();
+	}
+	return null;
+}
+
+function handleSpecial(raw) {
+	var split = raw.split("\n");
+	if(split[0].indexOf(".dek") >= 0) {
+		var p0 = raw.replace(/\[([^\[\]]+)::([^\[\]]+)\]/g, function(match, $1, $2) {
+			var safeclass = utils.SafeCSSClass($2, $1);
+			var style = library.getstyle(safeclass);
+			if (style != undefined) {
+				return '<a class="tooltip noshow" target="_blank" href="' + utils.GetCardURL($2, $1) + '" rel="' + $1 + '" data-preview="' + style + '">' + $2 + '</a>';
+			} else {
+				return '[' + $1 + "::" + $2 + "]";
+			}
+		});
+		split = p0.split("\n");
+		var deckstr = "<div class='inline-wrap'><div class='inline-preview mtg'></div></div>" + 
+    	"<div class='inline-icon mtg'></div><div class='titlewrap'><span class='decktitle'>" + split[0] + "\n</span><span>via MTGO DEK File</span></div><div class='cardlist'><ul>";
+    	for(var i = 1; i < split.length; i++) {
+    		var entry = split[i];
+    		if(entry.toLowerCase().indexOf("main (") >= 0 || entry.toLowerCase().indexOf("sideboard (") >= 0) {
+    			deckstr = deckstr + "<li class='separator'>" + entry.trim() + "</li>";
+    		} else {
+    			deckstr = deckstr + "<li>" + entry.trim() + "</li>";
+    		}
+    	}
+    	deckstr += "</ul></div>";
+    	return deckstr;
 	}
 	return null;
 }
@@ -104,7 +134,14 @@ function parseWithPromises(messages) {
 			}
 		}
 
-		// Type 3: Inline tooltips
+		// Type 3: Special parse for custom file uploads
+		var special = handleSpecial(raw);
+		if (special != null) {
+			results.push([elemid, 'special', special]);
+			continue;
+		}
+
+		// Type 4: Inline tooltips
 		var tooltips = handleTooltips(raw);
 		if (tooltips != null) {
 			results.push([elemid, 'tooltips', tooltips]);
@@ -126,10 +163,18 @@ function parseWithPromises(messages) {
 	});
 }
 
+function parseFile(path) {
+	return filehandler.parse(path);
+}
+
 /* Exports */
 
 exports.parse = (messages) => {
 	parseWithPromises(messages);
+};
+
+exports.parseFile = (path) => {
+	return parseFile(path);
 };
 
 exports.processKeyboard = (keytype, content) => {
