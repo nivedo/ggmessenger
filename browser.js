@@ -42,7 +42,7 @@ function SetTitle() {
 		var title = document.querySelector("._3v_v h1._5hy4");
 		var subtitle = document.querySelector("._3v_v ._3403");
 		title.innerHTML = "GGMessenger";
-		subtitle.innerHTML = "An unofficial Facebook Messenger for gamers.\n Sign in with Facebook to get started."
+		subtitle.innerHTML = "An unofficial Facebook Messenger for Magic and Hearthstone fans.\n Sign in with Facebook to get started."
 	}
 }
 
