@@ -32,8 +32,11 @@ function GetThreadType(threadid) {
 function OnSwitchThread() {
   var threadid = GetThreadID();
   SetKeyboardType(GetThreadType(threadid));
-  document.getElementById("customkey").innerHTML = GetThreadContent(threadid);
+  var content = GetThreadContent(threadid);
+  document.getElementById("customkey").innerHTML = content;
+  ipc.send('process-keyboard', [GetKeyType(), content, false]);
   AlignKeyboard();
+  placeCaretAtEnd(document.getElementById("customkey"));
 }
 
 function AlignKeyboard() {
@@ -190,6 +193,8 @@ function CreateCustomKeyboard(default_type) {
 
     inputbox.appendChild(keycontainer);
   }
+
+  ClearAuto(true);
 }
 
 function CreateAutocomplete(default_type) {

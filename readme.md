@@ -2,35 +2,36 @@
 
 > An unofficial Facebook Messenger for Magic & Hearthstone addicts.
 
-Supports both OSX and Windows.  Based on [*Caprine*](https://github.com/sindresorhus/caprine/releases/latest) by Sindre Sorhus.
+Based on [*Caprine*](https://github.com/sindresorhus/caprine/releases/latest) by Sindre Sorhus.
+
+## Installation
+
+GGMessenger currently supports both OSX and Windows.
 
 NOTE: Your computer must have access to MTG / Hearthstone sites to support integrations.  Firewalls will prevent integrations from working.
 
 * [OSX 10.9+ Zip](https://www.dropbox.com/s/o0r8pty6shubwqb/GGMessenger-osx-0.4.0.zip?dl=0)
 * [Windows 7+ Installer](https://www.dropbox.com/s/d8kwqkukferm0xj/GGMessenger-v0.4.0.exe?dl=0)
 
-<br>
 [![](media/screen3.png)](https://github.com/sindresorhus/caprine/releases/latest)
 
 ## Features
 
-### Easy card linking
+### Link any card from MTG or Hearthstone
 
-Link any card from either Hearthstone or Magic with '@cardname' and autocomplete.  Toggle the autocomplete game by clicking on the MTG / Hearthstone Icon.
-
-### Inline card tooltips
-
-Use a card name with tooltip in any sentence by typing [mtg::cardname] for Magic cards and [hs::cardname] for Hearthstone cards.  For example:
+You can link a card image by sending `[cardname]`, or you can inline cards with tooltips:
 
 ```
-I ate a [mtg::black lotus], pooped a [mtg::lotus petal], and went [mtg::berserk].
+I heard they were reprinting [Force of Will] and [Wasteland] in EMA!
 ```
 
-![](media/screen4.png)
+GGMessenger supports both tab / click autocomplete for all cards.
 
-### Easy deck linking via URL
+### Link your decks from MTGO or any external URL.
 
-GGMessenger automatically expands decks from URLs that it recognizes.  Currently, it supports:
+Easily share your current draft deck from MTGO by simply exporting it as a DEK file, and drag-and-drop into the chat window!
+
+GGMessenger also automatically expands decks from URLs that it recognizes.  Currently, it supports:
 
 ###### MTG
 * [TappedOut.net](http://tappedout.net)
@@ -42,14 +43,6 @@ GGMessenger automatically expands decks from URLs that it recognizes.  Currently
 ###### Hearthstone
 * [HearthPwn](http://hearthpwn.com)
 * [HearthHead](http://hearthhead.com)
-
-### Work in progress
-
-Other features in the works (but not quite done yet...)
-
-* Linking / importing deck from Hearthstone or MTGO client (PC only)
-* TCGPlayer pricing next to card names.
-* Support for more amazing games.  If you have any suggestions, let me know!
 
 ## Screenshots
 
