@@ -17,21 +17,21 @@ NOTE: Your computer must have access to MTG / Hearthstone sites to support integ
 
 ## Features
 
-### Link any card from MTG or Hearthstone
+### Card Linking
 
-You can link a card image by sending `[cardname]`, or you can inline cards with tooltips:
+Link *any* card from MTG or Hearthstone by sending `[cardname]`, or you can inline cards with tooltips:
 
 ```
 I heard they were reprinting [Force of Will] and [Wasteland] in EMA!
 ```
 
-GGMessenger supports both tab / click autocomplete for all cards.
+GGMessenger supports both tab / click autocomplete for all cards.  To switch the autocomplete, simply click the icon left of the keyboard.
 
-### Link your decks from MTGO or any external URL.
+### Easily Share Deck Lists
 
-Easily share your current draft deck from MTGO by simply exporting it as a DEK file, and drag-and-drop into the chat window!
+You can share your current draft deck from MTGO by simply exporting it as a DEK file, and drag-and-drop into the chat window!
 
-GGMessenger also automatically expands decks from URLs that it recognizes.  Currently, it supports:
+GGMessenger also automatically expands decks from many external URLs.  Currently, it supports:
 
 ###### MTG
 * [TappedOut.net](http://tappedout.net)
