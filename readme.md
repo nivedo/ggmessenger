@@ -13,7 +13,7 @@ NOTE: Your computer must have access to MTG / Hearthstone sites to support integ
 * [OSX 10.9+ Zip](https://www.dropbox.com/s/o0r8pty6shubwqb/GGMessenger-osx-0.4.0.zip?dl=0)
 * [Windows 7+ Installer](https://www.dropbox.com/s/d8kwqkukferm0xj/GGMessenger-v0.4.0.exe?dl=0)
 
-[![](media/screen3.png)](https://github.com/sindresorhus/caprine/releases/latest)
+[![](media/screen3.png)]
 
 ## Features
 
