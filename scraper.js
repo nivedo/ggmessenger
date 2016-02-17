@@ -13,6 +13,9 @@ function getParser(url) {
 	if (url.indexOf('mtgtop8.com') > 0) {
 		return _parseMTGTop8;
 	}
+	if (url.indexOf('deckstats.net/decks') > 0) {
+		return _parseDeckstats;
+	}
 	if (url.indexOf('mtggoldfish.com/deck') > 0 || url.indexOf('mtggoldfish.com/archetype') > 0) {
 		return _parseMTGGoldfish;
 	}
@@ -65,6 +68,30 @@ function _parseTappedout(url, $) {
     			qty = $(this).attr("data-quantity");
     		}
 	    	deckstr = deckstr + createCardElem(name, qty, "mtg");
+	    }
+    });
+
+    deckstr += "</ul></div>";
+
+    return deckstr;
+}
+
+function _parseDeckstats(url, $) {
+	var title = $("title").text();
+	var members = $(".deck_section h3, .cardtable tbody tr:not(.deck_section)");
+
+	var deckstr = "<div class='inline-wrap'><div class='inline-preview mtg'></div></div>" + 
+    	"<div class='inline-icon mtg'></div><div class='titlewrap'><a class='decktitle' target='_blank' href='" + 
+    	url + "'>" + title + "</a>\n<span>via <a href='http://www.deckstats.net'>Deckstats.net</a></span></div><div class='cardlist'><ul>";
+
+    members.each(function(index) {
+    	if($(this).is("h3")) {
+    		deckstr = deckstr + "<li class='separator'>" + $(this).text().trim() + "</li>";
+    	} else {
+    		var qty = $(this).find(".card_amount").text().trim();
+    		$(this).find(".card_amount").remove();
+    		var name = $(this).find("td a").first().text().trim();
+    		deckstr = deckstr + createCardElem(name, qty, "mtg");
 	    }
     });
 
