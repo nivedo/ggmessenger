@@ -61,7 +61,7 @@ a {
       rgba(0, 0, 0, 0.4), 
       rgba(0, 0, 0, 0.4)
     ),
-    url("../media/bg.jpg");
+    url("../media/bg3.jpg");
   background-size: cover; }
 
 @media screen and (min-width: 64em) {
